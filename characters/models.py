@@ -35,8 +35,6 @@ class Character(models.Model):
 
     bonds_progress = models.IntegerField(default=0)
 
-    assets = models.ManyToManyField('rules.AssetDefinition', through='CharacterAsset')
-
     def __str__(self):
         return self.name
     
