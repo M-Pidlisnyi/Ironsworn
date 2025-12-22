@@ -15,6 +15,6 @@ class VowInline(admin.TabularInline):
 
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
-	list_display = ("name", "user", "edge", "heart", "iron", "wits")
+	list_display = ("name", "user")
 	search_fields = ("name", "user__username")
 	inlines = [BondInline, VowInline]

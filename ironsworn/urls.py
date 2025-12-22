@@ -24,4 +24,5 @@ urlpatterns = [
     path('play/', include('gameplay.urls')),
     path('characters/', include('characters.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('rules/', include('rules.urls')),
 ]

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for asset in assets_list%}
+    <div>
+        <h4>{{asset.type}}</h4>
+        <h3>{{asset.name}}</h3>
+        <p>{{asset.description}}</p>
+        <ul style="list-style: circle;">
+            {% for abl in asset.abilities.all %}
+                <li {% if abl.is_active %}style="list-style: disc;"{%endif%}><b>{{abl.name}}</b><span>: {{abl.description}}</span><br></li>
+            {%endfor%}
+        </ul>
+    </div>
+{%endfor%}
+
+{%endblock%}
