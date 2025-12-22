@@ -6,7 +6,24 @@
     <title>Ironsworn</title>
 </head>
 <body>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+            <li>Hello {{user}}</li>
+            <li><form action="{% url 'logout' %}" method="post">{%csrf_token%}<button type="submit">Log out</button></form></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Log in</a></li>
+            <li><a href="#">Sign up</a></li>
+            {% endif %}
+            <hr>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#">Character Sheet</a></li>
+            <li><a href="#">All charactes</a></li>
+            <li><a href="{% url 'character-create' %}">New Character</a></li>
+        </ul>
+    </nav>
     {% block content %}
+    
     {% endblock %}
 </body>
 </html>
