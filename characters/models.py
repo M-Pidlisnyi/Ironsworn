@@ -11,7 +11,7 @@ DIFFICULTY_LEVELS = [#list of tuples, not a dict cause order matters
 
 # Create your models here.
 class Character(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)#keep Character and all game data user-scoped
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="characters")#keep Character and all game data user-scoped
 
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -24,10 +24,10 @@ class Character(models.Model):
     wits = models.IntegerField(default=0)
 
     #resources
-    health = models.IntegerField(default=0)
-    spirit = models.IntegerField(default=0)
-    supply = models.IntegerField(default=0)
-    momentum = models.IntegerField(default=0)
+    health = models.IntegerField(default=5)
+    spirit = models.IntegerField(default=5)
+    supply = models.IntegerField(default=5)
+    momentum = models.IntegerField(default=2)
     momentum_max = models.IntegerField(default=10)
     momentum_reset = models.IntegerField(default=2)
     
