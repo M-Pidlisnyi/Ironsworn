@@ -42,7 +42,7 @@ class Vow(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='vows')
     description = models.TextField()
     progress = models.IntegerField(default=0)
-    difficulty = models.IntegerField(max_length=20, choices=DIFFICULTY_LEVELS)
+    difficulty = models.IntegerField(choices=DIFFICULTY_LEVELS)
 
     def __str__(self):
         return f"{self.character.name} vowed to {self.description[:20]}..."
