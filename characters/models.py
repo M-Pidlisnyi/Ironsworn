@@ -31,7 +31,7 @@ class Character(models.Model):
     momentum_max = models.IntegerField(default=10)
     momentum_reset = models.IntegerField(default=2)
     
-    experice = models.IntegerField(default=0)
+    experience = models.IntegerField(default=0)
 
     bonds_progress = models.IntegerField(default=0)
 
