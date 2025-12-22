@@ -53,18 +53,24 @@ class Bond(models.Model):
 
     def __str__(self):
         return f"{self.character.name}'s bond: {self.description[:20]}..."
-    
 
-DEBILITY_TYPES = [
-    ("cond", "Condition"),
-    ("bane", "Bane"),
-    ("burd", "Burden"),
+
+DEBILITIES = [
+    ("wounded", "Condition: Wounded"),
+    ("shaken", "Condition: Shaken"),
+    ("unprepared", "Condition: Unprepared"),
+    ("encumbered", "Condition: Encumbered"),
+
+    ("maimed", "Bane: Maimed"),
+    ("corrupted", "Bane: Corrupted"),
+
+    ("cursed", "Burden: Cursed"),
+    ("tormented", "Burden: Tormented"),
 ]
 
 class Debility(models.Model):
-    character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='debilites')
-    name = models.CharField(max_length=20)
-    debility_type = models.CharField(max_length=4, choices=DEBILITY_TYPES)
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='debilities')
+    name = models.CharField(max_length=20, choices=DEBILITIES)
 
     def __str__(self):
         return f"{self.character.name} is {self.name}"
