@@ -1,5 +1,5 @@
 from django import forms
-from .models import Character, Vow
+from .models import Character, Vow, CharacterAsset
 
 class CharBaseInfoForm(forms.Form):
     name = forms.CharField(max_length=100, label="Character Name")
@@ -46,7 +46,7 @@ class CharResoursesForm(forms.Form):
     momentum_max = forms.IntegerField(initial=10, max_value=10, min_value=0, label="Max Momentum")
     momentum_reset = forms.IntegerField(initial=2, max_value=2, min_value=0, label="Momentum Reset")
 
-class CharBondsForm(forms.Form):
+class CharInitialBondsForm(forms.Form):
     bond_description_1 = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 3}),
         label="Bond 1 (Optional)",
@@ -63,8 +63,7 @@ class CharBondsForm(forms.Form):
         required=False
     )
 
-class VowForm(forms.Form):
-    # use a distinct field name so it doesn't clash with the character's description
+class IncitingVowForm(forms.Form):
     vow_description = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 4}),
         label="Vow Description",
@@ -73,3 +72,8 @@ class VowForm(forms.Form):
         choices=[(4, 'extreme'), (5, 'epic')],
         label="Vow Difficulty",
     )
+
+class CharacterAssetForm(forms.ModelForm):
+    class Meta:
+        model = CharacterAsset
+        fields = ["asset_definition"]

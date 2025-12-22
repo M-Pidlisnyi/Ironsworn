@@ -3,15 +3,15 @@ from django.views.generic import CreateView, DetailView, ListView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 
-from .models import Character, Bond, Vow
-from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharBondsForm, VowForm
+from .models import Character, Bond, Vow, CharacterAsset
+from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, IncitingVowForm, CharacterAssetForm
 
 CC_STAGES_FROMS = [
     CharBaseInfoForm,
     CharStatsForm,
     CharResoursesForm,
-    CharBondsForm,
-    VowForm
+    CharInitialBondsForm,
+    IncitingVowForm
 ]
 
 @login_required
@@ -89,3 +89,18 @@ class CharacterListView(ListView):
 
     def get_queryset(self):
         return Character.objects.filter(user=self.request.user)
+    
+class AddAssetView(CreateView):
+    model = CharacterAsset
+    template_name = 'characters/add_asset.html'
+    form_class = CharacterAssetForm
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+
+        character_id = self.kwargs.get('char_id')
+        character = Character.objects.get(id=character_id)
+
+        obj.character = character
+        obj.save()
+        return redirect('character-sheet', pk=character_id)
