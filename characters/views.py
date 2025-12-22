@@ -3,14 +3,15 @@ from django.views.generic import CreateView, DetailView, ListView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 
-from .models import Character, Bond
-from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharBondsForm
+from .models import Character, Bond, Vow
+from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharBondsForm, VowForm
 
 CC_STAGES_FROMS = [
     CharBaseInfoForm,
     CharStatsForm,
     CharResoursesForm,
-    CharBondsForm
+    CharBondsForm,
+    VowForm
 ]
 
 @login_required
@@ -43,15 +44,19 @@ def character_creation(request: HttpRequest):
     return render(request, 'characters/character_creation.html', {'form': form})
 
 def save_character(request: HttpRequest) -> HttpResponse:
-    data = request.session.get('char_creation_data', {})
+    data:dict = request.session.get('char_creation_data', {})
     
     # Extract bond descriptions from data (they shouldn't be saved to Character model)
-    bond_descriptions = [
+    bond_descriptions:list[str] = [
         data.pop('bond_description_1', ''),
         data.pop('bond_description_2', ''),
         data.pop('bond_description_3', ''),
     ]
-  
+    
+    # Extract vow data
+    vow_description:str = data.pop('vow_description', '')
+    vow_difficulty = data.pop('difficulty', 0)
+
     character = Character.objects.create(user=request.user, **data)
     
     # Create Bond objects for non-empty descriptions
@@ -62,6 +67,15 @@ def save_character(request: HttpRequest) -> HttpResponse:
             bond_count += 1
     character.bonds_progress = bond_count
     character.save()
+    
+    # Create Vow with progress set to 0
+    if vow_description:
+        Vow.objects.create(
+            character=character,
+            description=vow_description,
+            difficulty=vow_difficulty,
+            progress=0
+        )
 
     del request.session['char_creation_data']
     return redirect('character-sheet', pk=character.pk)

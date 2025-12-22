@@ -42,17 +42,17 @@ class Vow(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='vows')
     description = models.TextField()
     progress = models.IntegerField(default=0)
-    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_LEVELS) # type: ignore
+    difficulty = models.IntegerField(max_length=20, choices=DIFFICULTY_LEVELS)
 
     def __str__(self):
-        return f"{self.character.name}'s vow: {self.description[:20]}..."
+        return f"{self.character.name} vowed to {self.description[:20]}..."
     
 class Bond(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='bonds')
     description = models.TextField()
 
     def __str__(self):
-        return f"{self.character.name}'s bond: {self.description[:20]}..."
+        return f"{self.character.name} is bound to {self.description[:20]}..."
 
 
 DEBILITIES = [

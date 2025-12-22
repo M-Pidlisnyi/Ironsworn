@@ -21,6 +21,22 @@
     <li>Max momentum: {{character.momentum_max}}</li>
     <li>Momentum reset: {{character.momentum_reset}}</li>
 </ul>
+<h3>Bonds</h3>
+<p>{{ character.bonds_progress }}</p>
+<ul>
+{%for bond in character.bonds.all%}
+    <li>{{bond.description}}</li>
+{%endfor%}
+</ul>
+
+
+<h3>Vows</h3>
+<ul>
+    {%for vow in character.vows.all%}
+    <li>{{vow.description}} - Difficulty: {{vow.get_difficulty_display}}</li>
+    {%endfor%}
+</ul>
+
 <h3>Debilities</h3>
     <b>Conditions:</b>
         <ul>
@@ -39,12 +55,4 @@
             <li><s>Cursed</s></li>
             <li><s>Tormented</s></li>
         </ul>
-
-<h3>Bonds</h3>
-<p>{{ character.bonds_progress }}</p>
-<ul>
-{%for bond in character.bonds.all%}
-    <li>{{bond.description}}</li>
-{%endfor%}
-</ul>
 {% endblock %}
