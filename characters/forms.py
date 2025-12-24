@@ -1,5 +1,6 @@
 from django import forms
 from .models import Character, Vow, CharacterAsset
+from rules.models import AssetDefinition
 
 class CharBaseInfoForm(forms.Form):
     name = forms.CharField(max_length=100, label="Character Name")
@@ -37,7 +38,7 @@ class CharStatsForm(forms.Form):
         return cleaned_data
     
 class CharResoursesForm(forms.Form):
-    experice = forms.IntegerField(label="Experience", initial=0, disabled=True )
+    experience = forms.IntegerField(label="Experience", initial=0, disabled=True )
     health = forms.IntegerField(label="Health", initial=5, disabled=True )
     spirit = forms.IntegerField(label="Spirit", initial=5, disabled=True )
     supply = forms.IntegerField(label="Supply", initial=5, disabled=True )
@@ -63,7 +64,7 @@ class CharInitialBondsForm(forms.Form):
         required=False
     )
 
-class IncitingVowForm(forms.Form):
+class BackgroungVowForm(forms.Form):
     vow_description = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 4}),
         label="Vow Description",
@@ -72,6 +73,32 @@ class IncitingVowForm(forms.Form):
         choices=[(4, 'extreme'), (5, 'epic')],
         label="Vow Difficulty",
     )
+
+class InitialAssetsForm(forms.Form):
+    asset_definition_1 = forms.ChoiceField(
+        label="Asset 1",
+        required=False
+    )
+    asset_definition_2 = forms.ChoiceField(
+        label="Asset 2",
+        required=False
+    )
+    asset_definition_3 = forms.ChoiceField(
+        label="Asset 3",
+        required=False
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Populate choices from AssetDefinition instances
+        assets = AssetDefinition.objects.all()
+        choices = [('', '--- Select an asset ---')] + [(asset.pk, asset.name) for asset in assets]
+        
+        self.fields['asset_definition_1'].choices = choices
+        self.fields['asset_definition_2'].choices = choices
+        self.fields['asset_definition_3'].choices = choices
+
+
 
 class CharacterAssetForm(forms.ModelForm):
     class Meta:

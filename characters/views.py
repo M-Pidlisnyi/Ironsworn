@@ -3,15 +3,18 @@ from django.views.generic import CreateView, DetailView, ListView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 
+from rules.models import AssetDefinition
+
 from .models import Character, Bond, Vow, CharacterAsset
-from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, IncitingVowForm, CharacterAssetForm
+from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, CharacterAssetForm, InitialAssetsForm
 
 CC_STAGES_FROMS = [
     CharBaseInfoForm,
     CharStatsForm,
     CharResoursesForm,
     CharInitialBondsForm,
-    IncitingVowForm
+    BackgroungVowForm,
+    InitialAssetsForm,
 ]
 
 @login_required
@@ -37,6 +40,8 @@ def character_creation(request: HttpRequest):
             if stage < len(CC_STAGES_FROMS):
                 return redirect(request.path + f'?stage={stage+1}')
             else:
+                #save_character gets data from session and creates Character object
+                
                 return save_character(request)
     else:
         form = form_class()
@@ -56,6 +61,13 @@ def save_character(request: HttpRequest) -> HttpResponse:
     # Extract vow data
     vow_description:str = data.pop('vow_description', '')
     vow_difficulty = data.pop('difficulty', 0)
+ 
+    #Extract assets data
+    initial_assets = [
+        data.pop('asset_definition_1', None),
+        data.pop('asset_definition_2', None),
+        data.pop('asset_definition_3', None),
+    ]
 
     character = Character.objects.create(user=request.user, **data)
     
@@ -76,6 +88,18 @@ def save_character(request: HttpRequest) -> HttpResponse:
             difficulty=vow_difficulty,
             progress=0
         )
+
+    # Create CharacterAsset objects for selected assets
+    for asset_def_id in initial_assets:
+        if asset_def_id:
+            try:
+                asset_definition = AssetDefinition.objects.get(id=asset_def_id)
+                CharacterAsset.objects.create(
+                    character=character,
+                    asset_definition=asset_definition
+                )
+            except AssetDefinition.DoesNotExist:
+                continue  # Skip invalid asset definitions
 
     del request.session['char_creation_data']
     return redirect('character-sheet', pk=character.pk)

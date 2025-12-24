@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{ character.name }}'s Character Sheet</h1>
 {% if character.assets.count < 3 %}
-<p>No assets yet. Pick up to 3 before starting</p>
+<p>Not enough assets. Pick up to 3 before playing</p>
 {%endif%}
 <p>{{ character.description }}</p>
 <p>Experience: {{character.experience}}</p>
