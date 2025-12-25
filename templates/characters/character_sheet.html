@@ -60,9 +60,10 @@
         </ul>
 
 <h3>Assets</h3>
+<a href="{% url 'character-assets-list' character.pk %}">More</a>
 <ul>
     {%for asset in character.assets.all%}
-    <li>{{asset.asset_definition.name}}: {{asset.asset_definition.description}}</li>
+    <li>{{asset.definition.title}}: {{asset.definition.description}}</li>
     {%endfor%}
 </ul>
 <button><a href="{% url 'add-asset' character.id %}">Add asset</a></button>

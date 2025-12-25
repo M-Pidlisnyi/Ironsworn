@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DetailView, ListView
 from django.http import HttpRequest, HttpResponse
@@ -98,6 +99,7 @@ def save_character(request: HttpRequest) -> HttpResponse:
                     character=character,
                     asset_definition=asset_definition
                 )
+                #TODO: create CharacterAssetAbility objects for all of this asset's abilities
             except AssetDefinition.DoesNotExist:
                 continue  # Skip invalid asset definitions
 
@@ -128,3 +130,12 @@ class AddAssetView(CreateView):
         obj.character = character
         obj.save()
         return redirect('character-sheet', pk=character_id)
+
+class CharacterAssetsListView(ListView):
+    model = CharacterAsset
+    context_object_name = 'assets_list'
+
+    def get_queryset(self):
+        character_id = self.kwargs.get('char_id')
+        return CharacterAsset.objects.filter(character__id=character_id)
+    

@@ -92,7 +92,7 @@ class InitialAssetsForm(forms.Form):
         super().__init__(*args, **kwargs)
         # Populate choices from AssetDefinition instances
         assets = AssetDefinition.objects.all()
-        choices = [('', '--- Select an asset ---')] + [(asset.pk, asset.name) for asset in assets]
+        choices = [('', '--- Select an asset ---')] + [(asset.pk, asset.title) for asset in assets]
         
         self.fields['asset_definition_1'].choices = choices
         self.fields['asset_definition_2'].choices = choices
@@ -103,4 +103,4 @@ class InitialAssetsForm(forms.Form):
 class CharacterAssetForm(forms.ModelForm):
     class Meta:
         model = CharacterAsset
-        fields = ["asset_definition"]
+        fields = ["definition"]

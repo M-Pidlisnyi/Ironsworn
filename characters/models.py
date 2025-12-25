@@ -78,14 +78,32 @@ class Debility(models.Model):
 
 class CharacterAsset(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='assets')
-    asset_definition = models.ForeignKey('rules.AssetDefinition', on_delete=models.CASCADE)
+    definition = models.ForeignKey('rules.AssetDefinition', on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('character', 'asset_definition')
+        unique_together = ('character', 'definition')
 
-class CharacteAssetAbility(models.Model):
+    def __str__(self):
+        return f"{self.character.name}'s {self.definition.title}"
+
+class CharacterAssetAbility(models.Model):
     character_asset = models.ForeignKey(CharacterAsset, on_delete=models.CASCADE, related_name='abilities')
-    asset_ability = models.ForeignKey('rules.AssetAbilityDefinition', on_delete=models.CASCADE)
+    definition = models.ForeignKey('rules.AssetAbilityDefinition', on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=False)
+   
+    class Meta:
+        unique_together = ('character_asset', 'definition')
+    
+    def __str__(self):
+        return self.definition.title
+
+class CharacterAssetComponent(models.Model):
+    character_asset = models.ForeignKey(CharacterAsset, on_delete=models.CASCADE, related_name='components')
+    definition = models.ForeignKey('rules.AssetComponentDefinition', on_delete=models.CASCADE)
+    value = models.CharField(max_length=20, null=True, blank=True)
 
     class Meta:
-        unique_together = ('character_asset', 'asset_ability')
+        unique_together = ('character_asset', 'definition')
+
+    def __str__(self):
+        return f"{self.definition.title} {self.value}"
