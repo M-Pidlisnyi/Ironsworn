@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for move in moves_list %}
+    <div>
+        <h4>{{move.category}}</h4>
+        <a href="{% url 'move-detail' move.pk %}"><h3>{{move.title}}</h3></a>
+    </div>
+{%endfor%}
+
+{%endblock%}

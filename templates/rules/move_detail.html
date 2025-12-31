@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <h2>{{ move.title }}</h2>
+        <h4>Category: {{ move.category }}</h4>
+        <p><strong>Trigger:</strong> {{ move.trigger_text }}</p>
+        <p><strong>Outcome:</strong> {{ move.outcome_text }}</p>
+        <p><strong>Roll Type:</strong> {{ move.roll_type }}</p>
+    </div>
+{% endblock %}
