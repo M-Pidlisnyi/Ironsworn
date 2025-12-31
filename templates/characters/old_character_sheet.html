@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ character.name }}'s Character Sheet</h1>
+{% if character.assets.count < 3 %}
+<p>Not enough assets. Pick up to 3 before playing</p>
+{%endif%}
+<p>{{ character.description }}</p>
+<p>Experience: {{character.experience}}</p>
+<ul>
+    <li>Edge: {{ character.edge }}</li>
+    <li>Heart: {{ character.heart }}</li>
+    <li>Iron: {{ character.iron }}</li>
+    <li>Shadow: {{ character.shadow }}</li>
+    <li>Wits: {{ character.wits }}</li>
+</ul>
+<ul>
+    <li>Health: {{ character.health }}</li>
+    <li>Spirit: {{ character.spirit }}</li>
+    <li>Supply: {{ character.supply }}</li>
+</ul>
+<ul>
+    <li>Momentum: {{character.momentum}}</li>
+    <li>Max momentum: {{character.momentum_max}}</li>
+    <li>Momentum reset: {{character.momentum_reset}}</li>
+</ul>
+<h3>Bonds</h3>
+<p>{{ character.bonds_progress }}</p>
+<ul>
+{%for bond in character.bonds.all%}
+    <li>{{bond.description}}</li>
+{%endfor%}
+</ul>
+
+
+<h3>Vows</h3>
+<ul>
+    {%for vow in character.vows.all%}
+    <li>{{vow.description}} - Difficulty: {{vow.get_difficulty_display}}</li>
+    {%endfor%}
+</ul>
+
+<h3>Debilities</h3>
+    <b>Conditions:</b>
+        <ul>
+            <li><s>Wounded</s></li>
+            <li><s>Shaken</s></li>
+            <li><s>Unprepared</s></li>
+            <li><s>Encumbered</s></li>
+        </ul>
+    <b>Banes:</b>
+        <ul>
+            <li><s>Maimed</s></li>
+            <li><s>Corrupted</s></li>
+        </ul>
+    <b>Burdens:</b>
+        <ul>
+            <li><s>Cursed</s></li>
+            <li><s>Tormented</s></li>
+        </ul>
+
+<h3>Assets</h3>
+<a href="{% url 'character-assets-list' character.pk %}">More</a>
+<ul>
+    {%for asset in character.assets.all%}
+    <li>{{asset.definition.title}}: {{asset.definition.description}}</li>
+    {%endfor%}
+</ul>
+<button><a href="{% url 'add-asset' character.id %}">Add asset</a></button>
+{% endblock %}

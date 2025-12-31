@@ -1,0 +1,195 @@
+.sheet {
+  width: 55%;
+  margin: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+}
+
+.line {
+  border: 1px solid #333;
+  height: 24px;
+  padding-left: 5px;
+  padding-bottom: 10px;
+  font-size: larger;
+  background-color: gainsboro;
+}
+
+.xp-dots .dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid #333;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 2px;
+}
+
+.dot.filled {
+  background: #111;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px;
+  margin-top: 20px;
+}
+
+.momentum{
+  margin-right: 5px;
+}
+.momentum-extra{
+  background-color: lightslategrey;
+}
+.momentum-label{
+  font-weight: bold;
+  text-wrap: wrap;
+}
+
+.momentum .tick,
+.status .tick {
+  border: 1px solid #333;
+  text-align: center;
+  padding: 4px;
+  margin-bottom: 2px;
+  font-size: 12px;
+}
+
+.active-momentum{
+  background-color: yellow;
+}
+.active-health{
+  background-color: red;
+}
+.active-spirit{
+  background-color: deepskyblue;
+}
+.active-supply{
+  background-color: limegreen;
+}
+
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 23px;
+}
+
+.stat {
+  border: 1px solid #333;
+  text-align: center;
+  padding: 8px 0;
+  font-weight: bold;
+}
+
+.section {
+  margin-top: 14px;
+}
+
+.section h3 {
+  text-align: center;
+  border-bottom: 1px solid #333;
+  font-size: 13px;
+}
+
+.progress-track {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin: 6px 0;
+}
+
+.box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #333;
+}
+
+.box.filled {
+  background: #333;
+}
+
+.vow-title{
+  text-align: center;
+  margin-bottom: 5px;
+}
+.rank{
+  text-align: center;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  border: 1px solid #333;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.circle.filled {
+  background: #111;
+}
+
+.difficulty-text{
+  padding-right: 50px;
+}
+
+.debilites-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.debility-box{
+  display: inline-block;
+  width: 35%;
+}
+.check {
+  border: 1px solid #333;
+  padding: 4px;
+  margin: 2px 0;
+  font-size: 11px;
+}
+.check.filled{
+  background: darkred;
+  color: white;
+}
+
+.status{
+  margin-left: 5px;
+}
+
+.status-block {
+  margin-bottom: 20px;
+}
+
+.status-label {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.sheet {
+  position: relative;
+}
+
+.sheet-banner {
+  position: absolute;
+  bottom: 0;
+  left: 6%;
+  width: 84%;
+  height: auto;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.75;
+}

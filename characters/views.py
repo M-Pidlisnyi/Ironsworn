@@ -110,6 +110,30 @@ class CharacterSheetView(DetailView):
     model = Character
     template_name = 'characters/character_sheet.html'
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context  = super().get_context_data(**kwargs)
+        context["momentum_tracker"] = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6]
+        context["difficulty_tracker"] = ["troublesome","dangerous","formidable","extreme","epic"]
+        character:Character = self.get_object() # type: ignore
+        context["statuses"] = [
+            ("HEALTH", character.health),
+            ("SPIRIT", character.spirit),
+            ("SUPPLY", character.supply)
+        ]
+        context["status_tracker"] = [5, 4, 3, 2, 1]
+
+        context["conditions_list"] = ["wounded", "shaken", "unprepared", "encumbered"]
+        context["char_conditions"] = [d.name for d in self.get_object().debilities.filter(type="cond")] # type: ignore
+
+        context["banes_list"] = ["maimed", "corrupted"]
+        context["char_banes"] = [d.name for d in self.get_object().debilities.filter(type="bane")]# type: ignore
+
+        context["burdens_list"] = ["cursed", "tormented"]
+        context["char_burdens"] = [d.name for d in self.get_object().debilities.filter(type="burd")]# type: ignore
+
+
+        return context
+
 class CharacterListView(ListView):
     model = Character
 
