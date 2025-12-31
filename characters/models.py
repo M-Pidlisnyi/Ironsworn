@@ -55,7 +55,10 @@ class Bond(models.Model):
         return f"{self.character.name} is bound to {self.description[:20]}..."
 
 
-DEBILITIES = [
+
+
+class Debility(models.Model):
+    DEBILITIES = [
     ("wounded", "Condition: Wounded"),
     ("shaken", "Condition: Shaken"),
     ("unprepared", "Condition: Unprepared"),
@@ -66,11 +69,15 @@ DEBILITIES = [
 
     ("cursed", "Burden: Cursed"),
     ("tormented", "Burden: Tormented"),
-]
-
-class Debility(models.Model):
+    ]
+    DEBILITY_TYPES = [
+        ("cond", "Condition"),
+        ("bane", "Bane"),
+        ("burd", "Burden")
+    ]
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='debilities')
     name = models.CharField(max_length=20, choices=DEBILITIES)
+    type = models.CharField(max_length=4, choices=DEBILITY_TYPES)
 
     def __str__(self):
         return f"{self.character.name} is {self.name}"

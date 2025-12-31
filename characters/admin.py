@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Character, Bond, Vow, CharacterAsset, CharacterAssetAbility, CharacterAssetComponent
+from .models import Character, Bond, Vow, CharacterAsset, CharacterAssetAbility, CharacterAssetComponent, Debility
 
 
 class BondInline(admin.TabularInline):
@@ -16,11 +16,17 @@ class AssetInline(admin.TabularInline):
 	model = CharacterAsset
 	extra = 0
 
+class DebilityInline(admin.TabularInline):
+	model = Debility
+	extra = 0
+
+
+
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
 	list_display = ("name", "user")
 	search_fields = ("name", "user__username")
-	inlines = [BondInline, VowInline, AssetInline]
+	inlines = [BondInline, VowInline, AssetInline, DebilityInline]
 
 class CharacterAssetAbilityInline(admin.TabularInline):
     model = CharacterAssetAbility
