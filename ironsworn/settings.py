@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'gameplay',
     'characters',
     'rules',
+    'django.contrib.admindocs',
 ]
 
 MIDDLEWARE = [

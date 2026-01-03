@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import AssetLibraryView, MoveReferenceView, MoveDetailView
 
+app_name = 'rules'
+
 urlpatterns = [
     path('library/', AssetLibraryView.as_view(), name='assets-library'),
     path('moves/', MoveReferenceView.as_view(), name='move-reference'),

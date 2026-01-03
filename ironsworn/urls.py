@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.contrib.auth import urls
 
 urlpatterns = [
+    path('admin/docs/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('', include('gameplay.urls')),
     path('play/', include('gameplay.urls')),

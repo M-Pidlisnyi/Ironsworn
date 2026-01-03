@@ -9,7 +9,7 @@ from rules.models import AssetDefinition
 from .models import Character, Bond, Vow, CharacterAsset
 from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, CharacterAssetForm, InitialAssetsForm
 
-CC_STAGES_FROMS = [
+CC_STAGES_FORMS = [
     CharBaseInfoForm,
     CharStatsForm,
     CharResoursesForm,
@@ -24,10 +24,10 @@ def character_creation(request: HttpRequest):
         stage = int(request.GET.get('stage', 1))
     except ValueError:
         stage = 1
-    if stage < 1 or stage > len(CC_STAGES_FROMS):
+    if stage < 1 or stage > len(CC_STAGES_FORMS):
         stage = 1 
 
-    form_class = CC_STAGES_FROMS[stage - 1]
+    form_class = CC_STAGES_FORMS[stage - 1]
 
     if request.method == 'POST':
         form = form_class(request.POST)
@@ -38,7 +38,7 @@ def character_creation(request: HttpRequest):
             request.session['char_creation_data'].update(form.cleaned_data)
             request.session.modified = True
            
-            if stage < len(CC_STAGES_FROMS):
+            if stage < len(CC_STAGES_FORMS):
                 return redirect(request.path + f'?stage={stage+1}')
             else:
                 #save_character gets data from session and creates Character object
@@ -71,15 +71,11 @@ def save_character(request: HttpRequest) -> HttpResponse:
     ]
 
     character = Character.objects.create(user=request.user, **data)
-    
+
     # Create Bond objects for non-empty descriptions
-    bond_count = 0
     for description in bond_descriptions:
         if description.strip():
             Bond.objects.create(character=character, description=description)
-            bond_count += 1
-    character.bonds_progress = bond_count
-    character.save()
     
     # Create Vow with progress set to 0
     if vow_description:
@@ -97,9 +93,8 @@ def save_character(request: HttpRequest) -> HttpResponse:
                 asset_definition = AssetDefinition.objects.get(id=asset_def_id)
                 CharacterAsset.objects.create(
                     character=character,
-                    asset_definition=asset_definition
+                    definition=asset_definition
                 )
-                #TODO: create CharacterAssetAbility objects for all of this asset's abilities
             except AssetDefinition.DoesNotExist:
                 continue  # Skip invalid asset definitions
 

@@ -5,7 +5,6 @@ from .models import CharacterAssetAbility, CharacterAssetComponent, CharacterAss
 
 @receiver(post_save, sender=CharacterAsset)
 def populate_character_assets(sender, instance, created, **kwargs):
-    print("populate_character_assets signal triggered")
     if not created:
         return
         

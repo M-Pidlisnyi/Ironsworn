@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import character_creation, CharacterSheetView, CharacterListView, AddAssetView, CharacterAssetsListView
 
+app_name = 'characters'
+
 urlpatterns = [
     path('create/', character_creation, name='character-create'),
     path('<int:pk>/', CharacterSheetView.as_view(), name='character-sheet'),

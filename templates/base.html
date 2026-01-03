@@ -15,7 +15,8 @@
                 <li>Hello {{user}}</li>
                 <li><form action="{% url 'logout' %}" method="post">{%csrf_token%}<button type="submit">Log out</button></form></li>
                 {% if user.is_superuser%}
-                    <li><a href="/admin/">Admin Panel</a></li>
+                    <li><a href="{% url 'admin:index' %}">Admin Panel</a></li>
+                    <li><a href="{% url 'django-admindocs-docroot' %}">Docs</a></li>
                 {% endif %}
             {% else %}
             <li><a href="{% url 'login' %}">Log in</a></li>
