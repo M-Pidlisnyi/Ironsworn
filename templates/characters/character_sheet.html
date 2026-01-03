@@ -127,6 +127,50 @@
         </div>
       </div>
 
+      <!-- ASSETS -->
+      <div class="section">
+        <h3>ASSETS</h3>
+        <div class="asset-flexbox">
+          {% for asset in character.assets.all %}
+          <div class="small-asset-card-wrapper">
+            <div class="small-asset-card card">
+              <div class="card-body">
+                <h5>
+                  <a href="#" class="ui-link">
+                    {{asset.definition.title}}
+                  </a>
+                </h5>
+              </div>
+            </div>
+            <div class="large-asset-card card asset-tooltip">
+              <div class="card-body asset-card-body">
+                <h5 class="card-title">{{asset.definition.title}}</h5>
+                <p class="card-text">
+                    <p>{{asset.definition.description}}</p>
+                    {% for component in asset.components.all %}
+                        <p>{{component.definition.title}}: <u>___{{component.value}}___</u></p>
+                    {%endfor%}
+                    <ul style="list-style: circle;">
+                        {% for ability in asset.abilities.all %}
+                            <li
+                                {% if ability.is_active %}
+                                    style="list-style: disc;"
+                                {% endif %}>
+                                    {{ability}}<br>
+                                    {{ability.definition.description}}
+                            </li>   
+
+                        {%endfor%}
+                    </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+          {%endfor%}
+        </div>
+        <p style="text-align: center;"><a  href="{% url 'characters:character-assets-list' character.pk %}" class="ui-link">View All</a></p>
+      </div>
+
     </div>
 
     <!-- STATUS -->

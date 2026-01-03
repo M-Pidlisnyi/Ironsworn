@@ -158,9 +158,19 @@ class AddAssetView(CreateView):
         obj.save()
         return redirect('character-sheet', pk=character_id)
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["character"] = Character.objects.get(id=self.kwargs.get('char_id'))
+        return context
+
 class CharacterAssetsListView(ListView):
     model = CharacterAsset
     context_object_name = 'assets_list'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["character"] = Character.objects.get(id=self.kwargs.get('char_id'))
+        return context
 
     def get_queryset(self):
         character_id = self.kwargs.get('char_id')

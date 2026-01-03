@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
 
 {%block content%}
-{% for asset in assets_list%}
-    <div>
-        <h4>{{asset.type}}</h4>
-        <h3>{{asset.title}}</h3>
-        <p>{{asset.description}}</p>
-        <ul style="list-style: circle;">
-            {% for abl in asset.abilities.all %}
-                <li {% if abl.initially_active %}style="list-style: disc;"{%endif%}><b>{{abl.title}}</b><span>: {{abl.description}}</span><br></li>
-            {%endfor%}
-        </ul>
-    </div>
-{%endfor%}
+<div class="asset-flexbox">
+    {% for asset in assets_list %}
+        <div class="library-asset-card card">
+            <div class="card-body asset-card-body">
+                <h5 class="card-title">{{asset.title}}</h5>
+                <p class="card-text">
+                    <p>{{asset.description}}</p>
+                    {% for component in asset.components.all %}
+                        <p>{{component.title}}: <u>___{{component.value}}___</u></p>
+                    {%endfor%}
+                    <ul style="list-style: circle;">
+                        {% for ability in asset.abilities.all %}
+                            <li
+                                {% if ability.initially_active %}
+                                    style="list-style: disc;"
+                                {% endif %}>
+                                    {{ability.title}}<br>
+                                    {{ability.description}}
+                            </li>   
 
+                        {%endfor%}
+                    </ul>
+                </p>
+            </div>
+        </div>
+        
+    {%endfor%}
+</div>
 {%endblock%}

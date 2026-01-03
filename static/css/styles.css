@@ -4,6 +4,12 @@
   font-family: Arial, Helvetica, sans-serif;
   color: #111;
 }
+a{
+  text-decoration: none;
+}
+.ui-link{
+  color: #111;
+}
 
 label {
   font-size: 16px;
@@ -142,6 +148,69 @@ label {
 
 .difficulty-text{
   padding-right: 50px;
+}
+
+.asset-flexbox{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+ 
+}
+
+.small-asset-card-wrapper {
+  position: relative;
+}
+
+.small-asset-card-wrapper .small-asset-card {
+  cursor: pointer;
+}
+
+.small-asset-card-wrapper .asset-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px double red;
+  border-radius: 2%;
+}
+
+.small-asset-card-wrapper:hover .asset-tooltip {
+  display: flex;
+}
+
+.large-asset-card{
+  display: inline-block;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+
+}
+.library-asset-card{
+  display: inline-block;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  font-size: smaller;
+}
+
+.asset-card-body{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.add-asset-btn{
+  margin: auto;
+  margin-left: 45%;
+}
+
+.add-asset-btn a{
+  color: #fff;
 }
 
 .debilites-grid {
