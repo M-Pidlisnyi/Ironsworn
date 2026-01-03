@@ -24,7 +24,11 @@
             {% endif %}
             <hr>
             <li><a href="{% url 'gameplay:home' %}">Home</a></li>
-            <li><a href="#">Last Character Sheet</a></li>
+            {% if request.session.last_character_id %}
+                <li><a href="{% url 'characters:character-sheet' request.session.last_character_id %}">Last Character Sheet</a></li>
+            {% else %}
+                <li><a href="#" class="text-muted">Last Character Sheet</a></li>
+            {% endif %}
             <li><a href="{% url 'characters:charactes-list' %}">All charactes</a></li>
             <li><a href="{% url 'characters:character-create' %}">New Character</a></li>
             <hr>

@@ -108,11 +108,16 @@ class CharacterSheetView(DetailView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context  = super().get_context_data(**kwargs)
+        
+        character:Character = self.get_object() # type: ignore
+        
+        # Save last viewed character to session
+        self.request.session['last_character_id'] = character.pk
+        self.request.session.modified = True
+        
         context["momentum_tracker"] = settings.MOMENTUM_TRACK
         context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
     
-
-        character:Character = self.get_object() # type: ignore
         context["statuses"] = [
             ("HEALTH", character.health),
             ("SPIRIT", character.spirit),
@@ -129,8 +134,7 @@ class CharacterSheetView(DetailView):
 
         context["burdens_list"] = [d[0] for d in debilities if "Burden" in d[1]]
         context["char_burdens"] = [d.name for d in self.get_object().debilities.filter(type="burd")]# type: ignore
-
-
+        
         return context
 
 class CharacterListView(ListView):
