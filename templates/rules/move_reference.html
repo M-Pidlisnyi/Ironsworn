@@ -1,11 +1,23 @@
 {% extends 'base.html' %}
 
 {%block content%}
+<div class="moves-flexbox">
 {% for move in moves_list %}
-    <div>
-        <h4>{{move.category}}</h4>
-        <a href="{% url 'rules:move-detail' move.pk %}"><h3>{{move.title}}</h3></a>
+    <div class="move-card card">
+        <h5 class="card-subtitle">{{move.category}}</h5>
+        <a href="{% url 'rules:move-detail' move.pk %}" class="ui-link">
+            <h4 class="card-title">{{move.title}}</h4>
+        </a>
+        <p class="card-text">
+            <p class="move-text">
+                {{move.trigger_text}}
+            </p>
+            <p class="move-text">
+                {{move.outcome_text}}
+            </p>
+        </p>
     </div>
 {%endfor%}
+</div>
 
 {%endblock%}
