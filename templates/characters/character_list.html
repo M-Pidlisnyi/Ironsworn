@@ -2,7 +2,7 @@
 
 {%block content%}
 {% for char in character_list%}
-    <a href="{% url 'character-sheet' char.pk%}">{{char}}</a>
+    <a href="{% url 'characters:character-sheet' char.pk%}">{{char}}</a>
 {%endfor%}
 
 {%endblock%}

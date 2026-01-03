@@ -23,13 +23,13 @@
             <li><a href="#">Sign up</a></li>
             {% endif %}
             <hr>
-            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'gameplay:home' %}">Home</a></li>
             <li><a href="#">Last Character Sheet</a></li>
-            <li><a href="{% url 'charactes-list' %}">All charactes</a></li>
-            <li><a href="{% url 'character-create' %}">New Character</a></li>
+            <li><a href="{% url 'characters:charactes-list' %}">All charactes</a></li>
+            <li><a href="{% url 'characters:character-create' %}">New Character</a></li>
             <hr>
-            <li><a href="{% url 'assets-library' %}">Assets Library</a></li>
-            <li><a href="{% url 'move-reference' %}">Moves Reference</a></li>
+            <li><a href="{% url 'rules:assets-library' %}">Assets Library</a></li>
+            <li><a href="{% url 'rules:move-reference' %}">Moves Reference</a></li>
         </ul>
     </nav>
     {% block content %}
