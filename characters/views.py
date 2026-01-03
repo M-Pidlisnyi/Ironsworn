@@ -3,10 +3,11 @@ from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DetailView, ListView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 from rules.models import AssetDefinition
 
-from .models import Character, Bond, Vow, CharacterAsset
+from .models import Character, Bond, Vow, CharacterAsset, Debility
 from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, CharacterAssetForm, InitialAssetsForm
 
 CC_STAGES_FORMS = [
@@ -107,23 +108,26 @@ class CharacterSheetView(DetailView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context  = super().get_context_data(**kwargs)
-        context["momentum_tracker"] = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6]
-        context["difficulty_tracker"] = ["troublesome","dangerous","formidable","extreme","epic"]
+        context["momentum_tracker"] = settings.MOMENTUM_TRACK
+        context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
+    
+
         character:Character = self.get_object() # type: ignore
         context["statuses"] = [
             ("HEALTH", character.health),
             ("SPIRIT", character.spirit),
             ("SUPPLY", character.supply)
         ]
-        context["status_tracker"] = [5, 4, 3, 2, 1]
+        context["status_tracker"] = settings.RESOURCE_TRACK
 
-        context["conditions_list"] = ["wounded", "shaken", "unprepared", "encumbered"]
+        debilities = Debility.DEBILITIES#format: [("deb_name", "verbose_deb_type: verbose_deb_name"), ...]
+        context["conditions_list"] = [d[0] for d in debilities if "Condition" in d[1]]
         context["char_conditions"] = [d.name for d in self.get_object().debilities.filter(type="cond")] # type: ignore
 
-        context["banes_list"] = ["maimed", "corrupted"]
+        context["banes_list"] = [d[0] for d in debilities if "Bane" in d[1]]
         context["char_banes"] = [d.name for d in self.get_object().debilities.filter(type="bane")]# type: ignore
 
-        context["burdens_list"] = ["cursed", "tormented"]
+        context["burdens_list"] = [d[0] for d in debilities if "Burden" in d[1]]
         context["char_burdens"] = [d.name for d in self.get_object().debilities.filter(type="burd")]# type: ignore
 
 

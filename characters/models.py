@@ -1,13 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
-DIFFICULTY_LEVELS = [#list of tuples, not a dict cause order matters
-    (1, 'troublesome'),
-    (2, 'dangerous'),
-    (3, 'formidable'),
-    (4, 'extreme'),
-    (5, 'epic'),
-]
 
 
 class Character(models.Model):
@@ -61,7 +55,7 @@ class Vow(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='vows')
     description = models.TextField()
     progress = models.IntegerField(default=0)
-    difficulty = models.IntegerField(choices=DIFFICULTY_LEVELS)
+    difficulty = models.IntegerField(choices=settings.DIFFICULTY_LEVELS)
 
     def __str__(self):
         return f"{self.character.name} vowed to {self.description[:20]}..."
