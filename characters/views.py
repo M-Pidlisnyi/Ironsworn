@@ -21,6 +21,50 @@ CC_STAGES_FORMS = [
 
 @login_required
 def character_creation(request: HttpRequest):
+    """
+    Guide the user through multi-stage character creation.
+
+    This view implements a staged character creation workflow, where each
+    stage collects a portion of the character’s starting data according to
+    Ironsworn rules. Form data from each stage is accumulated in the user
+    session until the final stage is completed.
+
+    The current stage is controlled by the ``stage`` query parameter. If
+    the parameter is missing or invalid, the first stage is shown.
+
+    On successful completion of the final stage, the collected session
+    data is used to create a new :model:`characters.Character`.
+
+    This view requires authentication.
+
+    **Template:**
+    Renders the :template:`characters/character_creation.html` template. 
+    The template consecutevly displays each from defined in ``CC_STAGES_FORMS`` constant
+
+    **Context**
+
+    ``form``
+        The form instance corresponding to the current character creation
+        stage.
+
+    **Session State**
+
+    ``char_creation_data``
+        A dictionary stored in the session containing accumulated character
+        creation data from previous stages.
+        Each entry in the dictionary corresponds either to a field on
+        :model:`characters.Character` or to data used to initialize related
+        objects such as CharacterAssets, vows, or bonds.
+
+    **Flow**
+
+    - GET requests render the form for the current stage.
+    - POST requests validate and store stage data in the session.
+    - Intermediate stages redirect to the next stage.
+    - The final stage creates the character and exits the workflow.
+    """
+
+    #stage number validation
     try:
         stage = int(request.GET.get('stage', 1))
     except ValueError:
@@ -28,6 +72,7 @@ def character_creation(request: HttpRequest):
     if stage < 1 or stage > len(CC_STAGES_FORMS):
         stage = 1 
 
+    #get form corresponding to current stage
     form_class = CC_STAGES_FORMS[stage - 1]
 
     if request.method == 'POST':
@@ -43,7 +88,6 @@ def character_creation(request: HttpRequest):
                 return redirect(request.path + f'?stage={stage+1}')
             else:
                 #save_character gets data from session and creates Character object
-                
                 return save_character(request)
     else:
         form = form_class()
@@ -103,6 +147,64 @@ def save_character(request: HttpRequest) -> HttpResponse:
     return redirect('character-sheet', pk=character.pk)
 
 class CharacterSheetView(DetailView):
+    """
+    Display the complete character sheet for an Ironsworn character.
+
+    This view presents the full mechanical state of a single
+    :model:`characters.Character`, formatted to match the official
+    Ironsworn character sheet. It is the primary in-play view used during
+    gameplay.
+
+    In addition to the character instance, the view prepares tracker data
+    and categorized debility lists required for rendering progress tracks,
+    resource boxes, and condition checklists.
+
+    As an intented side effect, the viewed character is stored in the user session
+    as the most recently accessed character.
+
+    **Template:**
+    Renders the :template:`characters/character_sheet.html` template.
+
+    **Context**
+
+    ``character`` / ``object``
+        The :model:`characters.Character` being displayed.
+
+    ``momentum_tracker``
+        A list or sequence of ``int`` defining the momentum track range, sourced
+        from ``MOMENTUM_TRACK`` constant in project settings.
+
+    ``difficulty_tracker``
+        A list of difficulty rank labels used to render vow and bond
+        progress tracks, sourced from ``DIFFICULTY_LEVELS`` constant in project settings.
+
+    ``statuses``
+        A list of resource name and value pairs representing the
+        character’s current health, spirit, and supply.
+
+    ``status_tracker``
+        A list or sequence of ``int`` defining the resource track range, sourced
+        from ``RESOURCE_TRACK`` constant in project settings.
+
+    ``conditions_list``
+        A list of all possible condition debility identifiers, sourced from ``characters.models.Debility.DEBILITIES`` constant.
+
+    ``char_conditions``
+        A list of condition debilities currently affecting the character.
+
+    ``banes_list``
+        A list of all possible bane debility identifiers, sourced from ``characters.models.Debility.DEBILITIES`` constant.
+
+    ``char_banes``
+        A list of bane debilities currently affecting the character.
+
+    ``burdens_list``
+        A list of all possible burden debility identifiers, sourced from ``characters.models.Debility.DEBILITIES`` constant.
+
+    ``char_burdens``
+        A list of burden debilities currently affecting the character.
+    """
+
     model = Character
     template_name = 'characters/character_sheet.html'
 
@@ -138,12 +240,49 @@ class CharacterSheetView(DetailView):
         return context
 
 class CharacterListView(ListView):
+    """
+    Display the list of characters owned by the current user.
+
+    This view lists all :model:`characters.Character` instances associated
+    with the authenticated user. 
+
+    **Template:**
+    Renders the :template:`characters/character_list.html` template.
+
+    **Context**
+
+    ``character_list``
+        A queryset of :model:`characters.Character` objects owned by the current user.
+    """
     model = Character
 
     def get_queryset(self):
         return Character.objects.filter(user=self.request.user)
     
 class AddAssetView(CreateView):
+    """
+    Add a new asset to a character.
+
+    This view allows a player to select an :model:`rules.AssetDefinition` object and attach it
+    to a specific :model:`characters.Character`, creating a new
+    :model:`characters.CharacterAsset` instance.
+
+    The character is identified by the ``char_id`` URL parameter.
+
+    **Template:**
+    Renders the :template:`characters/add_asset.html` template.
+
+    **Context**
+
+    ``form``
+        A form used to select an asset definition to add to the character.
+        
+        fields: ``definition``, an HTML ``<select>`` element, with each ``<option>`` being an :model:`rules.AssetDefinition` object
+
+    ``character``
+        The :model:`characters.Character` to which the asset will be added.
+    """
+
     model = CharacterAsset
     template_name = 'characters/add_asset.html'
     form_class = CharacterAssetForm
@@ -164,6 +303,27 @@ class AddAssetView(CreateView):
         return context
 
 class CharacterAssetsListView(ListView):
+    """
+    Display the list of assets owned by a character.
+
+    This view lists all :model:`characters.CharacterAsset` instances
+    associated with a specific :model:`characters.Character`. It is used
+    to review, manage, or reference a character’s assets during play.
+
+    The character is identified by the ``char_id`` URL parameter.
+
+    **Template:**
+    Renders the :template:`characters/characterasset_list.html` template.
+
+    **Context**
+
+    ``assets_list``
+        A queryset of :model:`characters.CharacterAsset` objects owned by the character.
+
+    ``character``
+        The :model:`characters.Character` whose assets are being displayed.
+    """
+     
     model = CharacterAsset
     context_object_name = 'assets_list'
 
