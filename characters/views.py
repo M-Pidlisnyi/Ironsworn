@@ -1,4 +1,5 @@
 from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DetailView, ListView
 from django.http import HttpRequest, HttpResponse
@@ -337,4 +338,17 @@ class CharacterAssetsListView(ListView):
     def get_queryset(self):
         character_id = self.kwargs.get('char_id')
         return CharacterAsset.objects.filter(character__id=character_id)
+    
+
+class CharacterBondsList(ListView):
+    model = Bond
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["character"] = Character.objects.get(id=self.kwargs.get('char_id'))
+        return context
+    
+    def get_queryset(self):
+        character_id = self.kwargs.get('char_id')
+        return Bond.objects.filter(character__id=character_id)
     

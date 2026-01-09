@@ -303,4 +303,6 @@ label {
   text-overflow: ellipsis;
 }
 
-
+.bonds-page .progress-track{
+  justify-content: left;
+}

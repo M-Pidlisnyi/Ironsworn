@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import character_creation, CharacterSheetView, CharacterListView, AddAssetView, CharacterAssetsListView
+from .views import character_creation, CharacterSheetView, CharacterListView, AddAssetView, CharacterAssetsListView, CharacterBondsList
 
 app_name = 'characters'
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path('', CharacterListView.as_view()),
     path('<int:char_id>/add-asset/', AddAssetView.as_view(), name='add-asset'),
     path('<int:char_id>/assets/', CharacterAssetsListView.as_view(), name='character-assets-list'),
+    path('<int:char_id>/bonds/', CharacterBondsList.as_view(), name='character-bonds-list'),
 ]

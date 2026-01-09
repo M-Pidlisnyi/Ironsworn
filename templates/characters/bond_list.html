@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% load mathfilters %}
+
+{%block content%}
+<div class="bonds-page">
+    <h3>{{character.name}} is bound to:</h3>
+    <ul class="bonds-list">
+    {% for bond in bond_list %}
+        <li>
+            <div>
+                {{bond.description}}
+            </div>
+        </li>
+    {%endfor%}
+    </ul>
+    <h4>Bonds Progress</h4>
+    <div class="progress-track">
+        {% with full_boxes=character.bonds_progress|div:4 partial_amount=character.bonds_progress|modulo:4 %}
+            {% for i in "0123456789" %}
+                {% if forloop.counter <= full_boxes %}
+                <span class="box filled"></span>
+
+                {% elif forloop.counter == full_boxes|add:1 and partial_amount %}
+                <span class="box semi-filled-{{ partial_amount }}">{{ partial_amount }}</span>
+
+                {% else %}
+                <span class="box"></span>
+                
+                {% endif %}
+            {% endfor %}
+        {% endwith %}
+    </div>
+</div>
+{%endblock%}
