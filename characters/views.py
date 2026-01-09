@@ -1,5 +1,6 @@
 from typing import Any
 from django.db.models.query import QuerySet
+from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DetailView, ListView
 from django.http import HttpRequest, HttpResponse
@@ -11,7 +12,9 @@ from domain import progress_track as pt
 from rules.models import AssetDefinition
 
 from .models import Character, Bond, Vow, CharacterAsset, Debility
-from .forms import CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, CharacterAssetForm, InitialAssetsForm
+from .forms import (CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, InitialAssetsForm, 
+                    CharacterAssetForm, NewVowForm, NewBondForm)
+from .mixins import AddCharacterContextMixin, SaveCharacterAttributeMixin
 
 CC_STAGES_FORMS = [
     CharBaseInfoForm,
@@ -262,7 +265,7 @@ class CharacterListView(ListView):
     def get_queryset(self):
         return Character.objects.filter(user=self.request.user)
     
-class AddAssetView(CreateView):
+class AddAssetView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     """
     Add a new asset to a character.
 
@@ -287,25 +290,10 @@ class AddAssetView(CreateView):
     """
 
     model = CharacterAsset
-    template_name = 'characters/add_asset.html'
+    template_name = 'characters/generic_form.html'
     form_class = CharacterAssetForm
 
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-
-        character_id = self.kwargs.get('char_id')
-        character = Character.objects.get(id=character_id)
-
-        obj.character = character
-        obj.save()
-        return redirect('character-sheet', pk=character_id)
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["character"] = Character.objects.get(id=self.kwargs.get('char_id'))
-        return context
-
-class CharacterAssetsListView(ListView):
+class CharacterAssetsListView(AddCharacterContextMixin, ListView):
     """
     Display the list of assets owned by a character.
 
@@ -330,25 +318,23 @@ class CharacterAssetsListView(ListView):
     model = CharacterAsset
     context_object_name = 'assets_list'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["character"] = Character.objects.get(id=self.kwargs.get('char_id'))
-        return context
-
     def get_queryset(self):
         character_id = self.kwargs.get('char_id')
-        return CharacterAsset.objects.filter(character__id=character_id)
-    
+        return CharacterAsset.objects.filter(character__id=character_id)    
 
-class CharacterBondsList(ListView):
+class CharacterBondsList(AddCharacterContextMixin, ListView):
     model = Bond
-    
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["character"] = Character.objects.get(id=self.kwargs.get('char_id'))
-        return context
     
     def get_queryset(self):
         character_id = self.kwargs.get('char_id')
         return Bond.objects.filter(character__id=character_id)
     
+class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+    model = Bond
+    form_class = NewBondForm
+    template_name = 'characters/generic_form.html'
+
+class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+    model = Vow
+    form_class = NewVowForm
+    template_name = 'characters/generic_form.html'

@@ -31,6 +31,7 @@ label {
   background-color: gainsboro;
 }
 
+
 .xp-dots .dot {
   width: 10px;
   height: 10px;
@@ -153,6 +154,12 @@ label {
 }
 .rank{
   text-align: center;
+}
+.fullfill-vow-text{
+  font-size: small;
+  float: right;
+  padding-right: 10px;
+  opacity: .7;
 }
 
 .circle {

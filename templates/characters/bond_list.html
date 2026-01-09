@@ -31,5 +31,6 @@
             {% endfor %}
         {% endwith %}
     </div>
+    <a  href="{% url 'characters:add-bond' character.pk %}" class="ui-link">Forge a new Bond</a>
 </div>
 {%endblock%}

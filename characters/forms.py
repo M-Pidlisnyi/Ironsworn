@@ -1,5 +1,5 @@
 from django import forms
-from .models import Character, Vow, CharacterAsset
+from .models import Character, Vow, CharacterAsset, Bond
 from rules.models import AssetDefinition
 
 class CharBaseInfoForm(forms.Form):
@@ -104,3 +104,13 @@ class CharacterAssetForm(forms.ModelForm):
     class Meta:
         model = CharacterAsset
         fields = ["definition"]
+
+class NewVowForm(forms.ModelForm):
+    class Meta:
+        model = Vow
+        fields = ["description", "difficulty"]
+
+class NewBondForm(forms.ModelForm):
+    class Meta:
+        model = Bond
+        fields = ["description"]
