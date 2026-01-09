@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'characters',
     'rules',
     'django.contrib.admindocs',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

@@ -116,13 +116,35 @@ label {
 }
 
 .box {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border: 1px solid #333;
+  color: white;
+  font-size: small;
+  text-align: center;
+  vertical-align: middle;
+  padding-right: 1px;
+ 
 }
 
 .box.filled {
   background: #333;
+
+}
+
+.semi-filled-1{
+  background-color: rgba(51, 51, 51, 0.25);
+ 
+}
+
+.semi-filled-2{
+  background-color: rgba(51, 51, 51, 0.5);
+   
+}
+
+.semi-filled-3{
+   background-color: rgba(51, 51, 51, 0.75);
+   
 }
 
 .vow-title{
@@ -281,19 +303,4 @@ label {
   text-overflow: ellipsis;
 }
 
-.semi-filled-1{
-  opacity: 0.25;
-}
 
-.semi-filled-2{
-  opacity: 0.5;
-}
-
-.semi-filled-3{
-  opacity: 0.75;
-  
-}
-
-.ticks_text{
-  opacity: 1;
-}

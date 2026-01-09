@@ -2,6 +2,9 @@
 
 {% extends "base.html" %}
 {% block content %}
+{% load my_tags %}
+{% load mathfilters %}
+
 
 <div class="sheet">
 
@@ -55,15 +58,21 @@
       <div class="section">
         <h3>BONDS</h3>
         <div class="progress-track">
-          {% for i in "0123456789" %}
-          {% if forloop.counter <=  filled_bonds_progresses %}
-            <span class="box filled "></span>
-          {% elif forloop.counter == filled_bonds_progresses|add:1 and remainder_bonds_ticks %}
-            <span class="box filled semi-filled-{{remainder_bonds_ticks}}"><span class="ticks-text">{{remainder_bonds_ticks}}</span></span>
-          {% else %}
-            <span class="box"></span>
-          {% endif %}
-          {% endfor %}
+          
+          {% with full_boxes=character.bonds_progress|div:4 partial_amount=character.bonds_progress|modulo:4 %}
+            {% for i in "0123456789" %}
+              {% if forloop.counter <= full_boxes %}
+                <span class="box filled"></span>
+
+              {% elif forloop.counter == full_boxes|add:1 and partial_amount %}
+                <span class="box semi-filled-{{ partial_amount }}">{{ partial_amount }}</span>
+
+              {% else %}
+                <span class="box"></span>
+                
+              {% endif %}
+            {% endfor %}
+          {% endwith %}
         </div>
       </div>
 
@@ -79,10 +88,17 @@
             {% endfor %}
           </div>
           <div class="progress-track">
-            {% for i in "0123456789" %}
-              <span class="box"></span>
-            {% endfor %}
-             (currently displays ticks not proggreses. FIX later)
+            {% with filled_progess=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
+              {% for i in "0123456789" %}
+                {%if forloop.counter <= filled_progess %}
+                  <span class="box filled"></span>
+                {% elif forloop.counter == filled_progess|add:1%}
+                   <span class="box semi-filled-{{partial_amount}}">{{partial_amount}}</span>
+                {% else %}
+                <span class="box"></span>
+                {% endif %}
+              {% endfor %}
+            {% endwith %}
           </div>
         </div>
         {% endfor %}
