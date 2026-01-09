@@ -280,3 +280,20 @@ label {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.semi-filled-1{
+  opacity: 0.25;
+}
+
+.semi-filled-2{
+  opacity: 0.5;
+}
+
+.semi-filled-3{
+  opacity: 0.75;
+  
+}
+
+.ticks_text{
+  opacity: 1;
+}

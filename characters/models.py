@@ -38,7 +38,7 @@ class Character(models.Model):
 
     @property
     def bonds_progress(self) -> int:
-        return self.bonds.count#type: ignore
+        return self.bonds.count()#type: ignore
 
     def __str__(self):
         return self.name

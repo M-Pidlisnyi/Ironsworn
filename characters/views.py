@@ -5,6 +5,8 @@ from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+from domain import progress_track as pt
+
 from rules.models import AssetDefinition
 
 from .models import Character, Bond, Vow, CharacterAsset, Debility
@@ -237,6 +239,12 @@ class CharacterSheetView(DetailView):
         context["burdens_list"] = [d[0] for d in debilities if "Burden" in d[1]]
         context["char_burdens"] = [d.name for d in self.get_object().debilities.filter(type="burd")]# type: ignore
         
+        
+        filled_bonds_progresses, remainder_bond_ticks = pt.ticks_to_progress(character.bonds_progress)
+        context["filled_bonds_progresses"] = filled_bonds_progresses
+        context["remainder_bonds_ticks"]   = remainder_bond_ticks
+
+
         return context
 
 class CharacterListView(ListView):

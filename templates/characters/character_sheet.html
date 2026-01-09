@@ -56,9 +56,14 @@
         <h3>BONDS</h3>
         <div class="progress-track">
           {% for i in "0123456789" %}
-            <span class="box {% if forloop.counter <= character.bonds_progress %}filled{% endif %}"></span>
+          {% if forloop.counter <=  filled_bonds_progresses %}
+            <span class="box filled "></span>
+          {% elif forloop.counter == filled_bonds_progresses|add:1 and remainder_bonds_ticks %}
+            <span class="box filled semi-filled-{{remainder_bonds_ticks}}"><span class="ticks-text">{{remainder_bonds_ticks}}</span></span>
+          {% else %}
+            <span class="box"></span>
+          {% endif %}
           {% endfor %}
-          (currently displays ticks not proggreses. FIX later)
         </div>
       </div>
 
