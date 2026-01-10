@@ -15,22 +15,9 @@
     {%endfor%}
     </ul>
     <h4>Bonds Progress</h4>
-    <div class="progress-track">
-        {% with full_boxes=character.bonds_progress|div:4 partial_amount=character.bonds_progress|modulo:4 %}
-            {% for i in "0123456789" %}
-                {% if forloop.counter <= full_boxes %}
-                <span class="box filled"></span>
-
-                {% elif forloop.counter == full_boxes|add:1 and partial_amount %}
-                <span class="box semi-filled-{{ partial_amount }}">{{ partial_amount }}</span>
-
-                {% else %}
-                <span class="box"></span>
-                
-                {% endif %}
-            {% endfor %}
+        {% with filled_progess=character.bonds_progress|div:4 partial_amount=character.bonds_progress|modulo:4 %}
+            {% include 'progress_track.html' %}
         {% endwith %}
-    </div>
     <a  href="{% url 'characters:add-bond' character.pk %}" class="ui-link">Forge a new Bond</a>
 </div>
 {%endblock%}

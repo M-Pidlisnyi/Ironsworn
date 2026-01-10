@@ -11,7 +11,7 @@ from domain import progress_track as pt
 
 from rules.models import AssetDefinition
 
-from .models import Character, Bond, Vow, CharacterAsset, Debility
+from .models import Character, Bond, Vow, CharacterAsset, Debility, MinorQuest
 from .forms import (CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, InitialAssetsForm, 
                     CharacterAssetForm, NewVowForm, NewBondForm)
 from .mixins import AddCharacterContextMixin, SaveCharacterAttributeMixin
@@ -338,3 +338,11 @@ class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateVi
     model = Vow
     form_class = NewVowForm
     template_name = 'characters/generic_form.html'
+
+class MinorQuestsListView(AddCharacterContextMixin, ListView):
+    model = MinorQuest
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
+        return context

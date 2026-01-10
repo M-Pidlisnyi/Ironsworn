@@ -1,0 +1,11 @@
+<div class="progress-track">
+{% for i in "0123456789" %}
+    {%if forloop.counter <= filled_progress %}
+        <span class="box filled"></span>
+    {% elif forloop.counter == filled_progress|add:1%}
+        <span class="box semi-filled-{{partial_amount}}">{{partial_amount}}</span>
+    {% else %}
+        <span class="box"></span>
+    {% endif %}
+{% endfor %}
+</div>

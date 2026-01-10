@@ -24,9 +24,8 @@ label {
 
 .line {
   border: 1px solid #333;
-  height: 24px;
+  height: fit-content;
   padding-left: 5px;
-  padding-bottom: 10px;
   font-size: larger;
   background-color: gainsboro;
 }
@@ -152,6 +151,16 @@ label {
   text-align: center;
   margin-bottom: 5px;
 }
+
+.quest-title{
+  text-align: center;
+  margin-bottom: 15px;
+  vertical-align: middle;
+  display: inline-block;
+  width: 70%;
+  margin-left: 15%;
+}
+
 .rank{
   text-align: center;
 }

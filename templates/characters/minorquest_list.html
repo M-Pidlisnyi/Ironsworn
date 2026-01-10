@@ -1,0 +1,32 @@
+{%extends 'base.html' %}
+{% load mathfilters %}
+{% load my_tags %}
+
+
+{% block content %}
+    <h5>Progress track worksheet</h5>
+    <h3>{{character}}'s minor quests</h3>
+    {% for quest in character.quests.all%}
+            <div class="line quest-title">{{ quest }} 
+                <span class="fullfill-vow-text">
+                    <a href="#quest-{{quest.pk}}" class="ui-link">
+                        {% if quest.type == 'journey' %}
+                            Reach Your Destination
+                        {% elif quest.type == 'fight' %}
+                            End the Fight
+                        {% endif %}
+                    </a>
+                </span> 
+            </div>
+            <div class="rank">
+                {% for r in difficulty_tracker %}
+                    <span class="circle {% if quest.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
+                {% endfor %}
+            </div>
+            {% with filled_progress=quest.progress|div:4 partial_amount=quest.progress|modulo:4 %}
+                {% include "progress_track.html" %}
+            {% endwith %}
+            </div>
+    {% endfor %}
+{% endblock %}
+    

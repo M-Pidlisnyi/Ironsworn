@@ -38,6 +38,7 @@ class Character(models.Model):
 
     @property
     def bonds_progress(self) -> int:
+        """ticks, not progress boxes"""
         return self.bonds.count()#type: ignore
 
     def __str__(self):
@@ -54,7 +55,7 @@ class Vow(models.Model):
     """
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='vows')
     description = models.TextField()
-    progress = models.IntegerField(default=0)
+    progress = models.IntegerField(default=0, help_text="ticks, not progress boxes")
     difficulty = models.IntegerField(choices=settings.DIFFICULTY_LEVELS)
 
     def __str__(self):
@@ -73,6 +74,41 @@ class Bond(models.Model):
     def __str__(self):
         return f"{self.character.name} is bound to {self.description[:20]}..."
 
+class MinorQuest(models.Model):
+    """
+        Minor Quest is continous activity with a set goal and undetermined outcome.
+        This model isused to measure the pace and determine the outcome of a goal or challenge in specific situations.
+
+        By default the model includes ``Journey`` and ``Fight`` but is extendable.
+        
+        Each :model:`characters.MinorQuest` object belongs to  :model:`characters.Character`.
+
+        **Notice regarding the Ironsworn rules:**
+        
+        In the Ironsworn rulebook there is no gameplay difference between the vow, fight, journey or bonds progress track.
+        They are split here for easier management(e.g. grouping minor quest and separating vows) 
+        and because they have a clear narrative difference*
+    """
+    QUEST_TYPE = [
+        ('journey', "Journey"),
+        ('fight',   "Fight")
+    ]
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name="quests")
+    type = models.CharField(choices=QUEST_TYPE, max_length=10)
+    difficulty = models.IntegerField(choices=settings.DIFFICULTY_LEVELS)
+
+    title = models.CharField(max_length=100)
+    description = models.TextField(null=True, blank=True)
+
+    progress = models.IntegerField(default=0, help_text="ticks, not progress boxes")
+
+    modified_at = models.DateTimeField(auto_now=True, help_text="used to display last modifed quet on charsheet")
+
+    class Meta:
+        ordering = ["modified_at"]
+
+    def __str__(self) -> str:
+        return f"{self.type.capitalize()}: {self.title}"
 
 
 
@@ -110,6 +146,9 @@ class Debility(models.Model):
 
     def __str__(self):
         return f"{self.character.name} is {self.name}"
+    
+    class Meta:
+        verbose_name_plural = "Debilities"
     
 
 class CharacterAsset(models.Model):
