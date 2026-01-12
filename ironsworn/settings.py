@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'gameplay',
     'characters',
     'rules',
+    'worlds',
     'django.contrib.admindocs',
     'mathfilters',
 ]
