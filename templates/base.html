@@ -24,6 +24,9 @@
             {% endif %}
             <hr>
             <li><a href="{% url 'gameplay:home' %}">Home</a></li>
+            <li><a href="{% url 'gameplay:stories-list' %}">All Stories</a></li>
+            <li><a href="{% url 'gameplay:create-story' %}">New Story</a></li>
+            <hr>
             {% if request.session.last_character_id %}
                 <li><a href="{% url 'characters:character-sheet' request.session.last_character_id %}">Last Character Sheet</a></li>
             {% else %}

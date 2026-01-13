@@ -290,7 +290,7 @@ class AddAssetView(AddCharacterContextMixin, SaveCharacterAttributeMixin, Create
     """
 
     model = CharacterAsset
-    template_name = 'characters/generic_form.html'
+    template_name = 'generic_form.html'
     form_class = CharacterAssetForm
 
 class CharacterAssetsListView(AddCharacterContextMixin, ListView):
@@ -332,12 +332,12 @@ class CharacterBondsList(AddCharacterContextMixin, ListView):
 class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     model = Bond
     form_class = NewBondForm
-    template_name = 'characters/generic_form.html'
+    template_name = 'generic_form.html'
 
 class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     model = Vow
     form_class = NewVowForm
-    template_name = 'characters/generic_form.html'
+    template_name = 'generic_form.html'
 
 class MinorQuestsListView(AddCharacterContextMixin, ListView):
     model = MinorQuest

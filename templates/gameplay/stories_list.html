@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for story in stories_list%}
+    <a href="{% url 'gameplay:story-detail' story.pk %}">{{story}}</a>
+{%endfor%}
+
+{%endblock%}

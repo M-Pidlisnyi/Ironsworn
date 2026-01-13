@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{story.title}}</h2>
+    <div>
+        prologue - {{story.prologue}}
+    </div>
+    {% for event in story.events.all %}
+        <div>
+            {{event.order}} - {{event}}
+        </div>
+    {% endfor %}
+    <div>
+        <form method="post">
+            <label>next event</label> - <textarea name="text" placeholder="Event text"></textarea>
+            <input type="text">
+            <button type="submit">Write</button> 
+        </form>
+    </div>
+{% endblock %}

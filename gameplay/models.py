@@ -12,6 +12,12 @@ class Story(models.Model):
 
     participants = models.ManyToManyField("characters.Character", through="StoryParticipant")
 
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name_plural = "Stories"
+
 class Event(models.Model):
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name="events")
     character = models.ForeignKey("characters.Character", 
@@ -24,6 +30,9 @@ class Event(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     order = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ["created_at"]
     
 
 class StoryParticipant(models.Model):
