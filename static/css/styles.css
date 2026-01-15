@@ -335,11 +335,54 @@ nav a{
   display: inline-block;
   width: 20%;  
 }
-
-.truth-question{
-  color: #111;
+/* ------------- */
+.world-truths-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
 }
 
-.truth-quest-starter{
-  font-style: italic;
+.question-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.question-row label {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 1.5rem;
+    height: 2rem;
+}
+
+.question-row textarea,
+.question-row input {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-actions {
+    grid-column: 1 / -1;
+    margin: 24px 0px 10px 10px;
+}
+
+.truth-block{
+  display: inline-block;
+  width: fit-content;
+  margin-bottom: 10px;
+  min-height: 100px;
+
+}
+.truth-question{
+  background-color: #333;
+  color: white;
+  padding-left: 20px;
+}
+
+.truth-card-body{
+  padding: 0;
+}
+
+.truth-text{
+  padding: 10px;
 }

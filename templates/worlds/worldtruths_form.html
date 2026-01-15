@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{%block content%}
+    <h1>{{world.name}} Truths</h1>
+
+    <form method="post" class="world-truths-form">
+        {% csrf_token %}
+
+        
+        {% for field in form %}
+            <div class="question-row"><label>{{field.label}}</label>{{field}}</div> 
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Truths</button>
+        </div>
+    </form>
+{%endblock%}

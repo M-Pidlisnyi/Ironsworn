@@ -3,14 +3,23 @@
 {% block content %}
 
 <h3>{{world.name|upper}}</h3>
-
+<p class="world-desc">{{world.description}}</p>
 {% for truth in world.truths.all %}
-<div class="truth-block">
-    <h4 class="truth-question">{{truth.question|upper}}</h4>
-    <p class="truth-answer">{{truth.answer}}</p>
-    <p class="truth-quest-starter">Quest starter: {{truth.quest_starter}}</p>
+<div class="truth-block card">
+    <div class="truth-card-body card-body">
+        <h4 class="truth-question card-title">{{truth.get_question_display|upper}}</h4>
+        <div class="truth-text">
+            <p class="truth-answer card-text">{{truth.answer}}</p>
+            {% if truth.quest_starter %}
+            <p class="truth-quest-starter card-text">Quest starter: {{truth.quest_starter}}</p>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endfor %}
+<div>
+    <a href="#" class="btn btn-tertiary">Edit Truth</a>
+</div>
 
 
 

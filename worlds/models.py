@@ -14,7 +14,7 @@ class World(models.Model):
 
 class WorldTruth(models.Model):
     QUESTIONS = [
-        ("old world", "The Old World"),
+        ("old_world", "The Old World"),
         ("iron", "Iron"),
         ("legacies", "Legacies"),
         ("communities", "Communities"),
