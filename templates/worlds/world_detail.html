@@ -2,6 +2,16 @@
 
 {% block content %}
 
-{{world}}
+<h3>{{world.name|upper}}</h3>
+
+{% for truth in world.truths.all %}
+<div class="truth-block">
+    <h4 class="truth-question">{{truth.question|upper}}</h4>
+    <p class="truth-answer">{{truth.answer}}</p>
+    <p class="truth-quest-starter">Quest starter: {{truth.quest_starter}}</p>
+</div>
+{% endfor %}
+
+
 
 {% endblock %}

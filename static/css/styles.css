@@ -335,3 +335,11 @@ nav a{
   display: inline-block;
   width: 20%;  
 }
+
+.truth-question{
+  color: #111;
+}
+
+.truth-quest-starter{
+  font-style: italic;
+}

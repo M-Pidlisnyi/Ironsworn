@@ -27,7 +27,7 @@ class WorldTruth(models.Model):
         ("horrors", "The Horrors"),
     ]
 
-    world = models.ForeignKey(World, on_delete=models.CASCADE)
+    world = models.ForeignKey(World, on_delete=models.CASCADE, related_name="truths")
     question = models.TextField(choices=QUESTIONS)
     answer = models.TextField()
     quest_starter = models.TextField(null=True, blank=True)
