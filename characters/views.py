@@ -111,6 +111,7 @@ def save_character(request: HttpRequest) -> HttpResponse:
     ]
     
     # Extract vow data
+    vow_title: str = data.pop('vow_title', '')
     vow_description:str = data.pop('vow_description', '')
     vow_difficulty = data.pop('difficulty', 0)
  
@@ -132,6 +133,7 @@ def save_character(request: HttpRequest) -> HttpResponse:
     if vow_description:
         Vow.objects.create(
             character=character,
+            title=vow_title,
             description=vow_description,
             difficulty=vow_difficulty,
             progress=0
@@ -150,7 +152,7 @@ def save_character(request: HttpRequest) -> HttpResponse:
                 continue  # Skip invalid asset definitions
 
     del request.session['char_creation_data']
-    return redirect('character-sheet', pk=character.pk)
+    return redirect('characters:character-sheet', pk=character.pk)
 
 class CharacterSheetView(DetailView):
     """

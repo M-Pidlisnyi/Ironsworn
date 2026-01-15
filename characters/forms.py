@@ -65,6 +65,8 @@ class CharInitialBondsForm(forms.Form):
     )
 
 class BackgroungVowForm(forms.Form):
+    vow_title = forms.CharField()
+    
     vow_description = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 4}),
         label="Vow Description",

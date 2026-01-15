@@ -54,12 +54,13 @@ class Vow(models.Model):
     Each vow belongs to exactly one :model:`characters.Character`.
     """
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='vows')
-    description = models.TextField()
+    title = models.CharField(max_length=100)
+    description = models.TextField(null=True, blank=True)
     progress = models.IntegerField(default=0, help_text="ticks, not progress boxes")
     difficulty = models.IntegerField(choices=settings.DIFFICULTY_LEVELS)
 
     def __str__(self):
-        return f"{self.character.name} vowed to {self.description[:20]}..."
+        return f"{self.character.name} vowed to {self.title}"
     
 class Bond(models.Model):
     """
