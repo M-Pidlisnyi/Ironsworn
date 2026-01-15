@@ -1,12 +1,19 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 from django.http import HttpRequest
 
 from .forms import NewWorldForm, WorldTruthsForm
 from .models import World, WorldTruth
 
-# Create your views here.
+
+class WorldsListView(ListView):
+    model = World
+
+    def get_queryset(self):
+        return World.objects.filter(user=self.request.user)
+
 class NewWorldView(CreateView):
     model = World
     form_class = NewWorldForm
