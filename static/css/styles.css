@@ -322,3 +322,16 @@ label {
 .bonds-page .progress-track{
   justify-content: left;
 }
+
+nav{
+  background-color: #333;
+  color: white;
+}
+nav a{
+  color: white;
+  text-decoration: none;
+}
+.nav-block{
+  display: inline-block;
+  width: 20%;  
+}
