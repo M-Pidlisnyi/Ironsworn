@@ -7,13 +7,13 @@
     </div>
     {% for event in story.events.all %}
         <div>
-            {{event.order}} - {{event}}
+            {{forloop.counter}} - {{event.text}}
         </div>
     {% endfor %}
     <div>
         <form method="post">
+            {% csrf_token %}
             <label>next event</label> - <textarea name="text" placeholder="Event text"></textarea>
-            <input type="text">
             <button type="submit">Write</button> 
         </form>
     </div>

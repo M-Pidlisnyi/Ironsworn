@@ -29,10 +29,10 @@ class Event(models.Model):
 
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    order = models.PositiveIntegerField()
+    
 
     class Meta:
-        ordering = ["created_at"]
+        ordering = ["story", "created_at"]
     
 
 class StoryParticipant(models.Model):
