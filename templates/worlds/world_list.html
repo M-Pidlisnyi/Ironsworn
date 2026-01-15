@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for world in world_list %}
+<a href="{% url 'worlds:world-detail' world.pk %}">{{world}}</a>
+{% endfor %}
+{% endblock %}
