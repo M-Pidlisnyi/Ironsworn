@@ -65,6 +65,18 @@ label {
   text-wrap: wrap;
 }
 
+.tracker-control-buttons{
+  display: flex;
+  justify-content: space-around;
+  
+}
+.tracker-control-buttons>button{
+  border: none;
+  border-radius: 5px; 
+  background-color: #999;
+}
+
+
 .momentum .tick,
 .status .tick {
   border: 1px solid #333;

@@ -353,21 +353,21 @@ class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
         return context
     
     def post(self, request: HttpRequest, *args, **kwargs):
-        asset:CharacterAsset = self.get_object()
+        asset:CharacterAsset = self.get_object()#type: ignore
         
         print(request.POST)
         for key, value in request.POST.items():
             if key.startswith("component_"):
-                edited_component:CharacterAssetComponent = asset.components.get(definition__title=key.replace("component_", ""))
+                edited_component:CharacterAssetComponent = asset.components.get(definition__title=key.replace("component_", ""))#type: ignore
                 edited_component.value = value
                 edited_component.save()
             elif key.startswith("ability_"):
                 #only inactive abilities can be turned on, you can't turn off already activated ability
-                edited_ability:CharacterAssetAbility = asset.abilities.get(definition__title=key.replace("ability_", ""))
+                edited_ability:CharacterAssetAbility = asset.abilities.get(definition__title=key.replace("ability_", ""))#type: ignore
                 edited_ability.is_active = True
                 edited_ability.save()
 
-        return redirect("characters:character-assets-list", char_id=self.get_object().character.id)
+        return redirect("characters:character-assets-list", char_id=self.get_object().character.id)#type: ignore
     
 class NewMinorQuestView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     model = MinorQuest
@@ -381,5 +381,24 @@ class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, L
         context =  super().get_context_data(**kwargs)
         context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
         return context
+
+
+def change_resource(request: HttpRequest, char_id:int):
+    resource_name = request.GET.get("resource", "")
+    action = request.GET.get("action", "")
+   
+    if action not in {"up", "down"}:
+        return redirect("characters:character-sheet", char_id)
+
+    delta = 1 if action == "up" else -1
+    character = Character.objects.get(id=char_id)
+
+    if resource_name == "momentum":
+        character.change_momentum(delta)
+    elif resource_name:
+        character.change_resource(resource_name, delta)
+    character.save(update_fields=[resource_name])
+
+    return redirect("characters:character-sheet", char_id)
 
 

@@ -41,9 +41,9 @@ class Character(models.Model):
             - If you have one debility marked, your momentum reset is +1.
             - If you have more than one debility marked, your momentum reset is 0.
         """
-        if self.debilities.count() == 1:
+        if self.debilities.count() == 1:#type: ignore
             return 1
-        elif self.debilities.count() > 1:
+        elif self.debilities.count() > 1:#type: ignore
             return 0
         return 2
     
@@ -54,7 +54,7 @@ class Character(models.Model):
             - -1 for each debility marked
         """
         value = 10
-        for _ in range(self.debilities.count()):
+        for _ in range(self.debilities.count()):#type: ignore
             value -= 1
         return value
 
@@ -66,6 +66,21 @@ class Character(models.Model):
     def __str__(self):
         return self.name
     
+    def change_momentum(self, delta:int):
+        min_v, max_v = settings.MOMENTUM_TRACK[-1], settings.MOMENTUM_TRACK[0]
+        value = max(min(self.momentum + delta, max_v), min_v)
+        self.momentum = value
+        self.save(update_fields=["momentum"])
+
+    def change_resource(self, resource:str, delta:int):
+        if not resource in {"health", "spirit", "supply"}:
+            raise AttributeError(f"Invalid resource: {resource}")
+        
+        min_v, max_v = settings.RESOURCE_TRACK[-1], settings.RESOURCE_TRACK[0]
+        value = max(min(getattr(self, resource) + delta, max_v), min_v)
+        setattr(self, resource, value)
+        self.save(update_fields=[resource])
+
 class Vow(models.Model):
     """
     A sworn vow undertaken by a character making the Swear an Iron Vow move.

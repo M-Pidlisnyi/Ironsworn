@@ -32,6 +32,10 @@
     <!-- MOMENTUM -->
     <div class="momentum">
         <div class="momentum-label">MOMENTUM</div>
+        <div class="tracker-control-buttons">
+          <button><a href="{% url 'characters:change-resource' character.id %}?resource=momentum&action=down" class="ui-link">-</a></button> 
+          <button><a href="{% url 'characters:change-resource' character.id %}?resource=momentum&action=up" class="ui-link">+</a></button>
+        </div>
       {% for i in momentum_tracker %}
         <div class="tick {% if character.momentum == i %}active-momentum{% endif %}">
           {{ i }}
@@ -168,7 +172,11 @@
     <div class="status">
       {% for label,value in statuses %}
         <div class="status-block">
-          <div class="status-label">{{ label }}</div>
+          <div class="status-label">{{ label }} </div>
+          <div class="tracker-control-buttons">
+            <button><a href="{% url 'characters:change-resource' character.id %}?resource={{label|lower}}&action=down" class="ui-link">-</a></button> 
+            <button><a href="{% url 'characters:change-resource' character.id %}?resource={{label|lower}}&action=up" class="ui-link">+</a></button>
+          </div>
           {% for i in status_tracker %}
             <div class="tick {% if value == i %}
                     {% if label == 'HEALTH' %}
