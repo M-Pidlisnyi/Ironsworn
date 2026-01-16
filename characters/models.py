@@ -99,6 +99,11 @@ class Vow(models.Model):
     def __str__(self):
         return f"{self.character.name} vowed to {self.title}"
     
+    def increase_progress(self):
+        """Marks the ticks corresponding to the difficulty rating and saves the object"""
+        self.progress += settings.TICK_PER_DIFFICULTY[self.difficulty]
+        self.save(update_fields=["progress"])
+    
 class Bond(models.Model):
     """
     A narrative bond between a character and a person or community, created by making a Forge a Bond move.
@@ -147,8 +152,11 @@ class MinorQuest(models.Model):
 
     def __str__(self) -> str:
         return f"{self.type.capitalize()}: {self.title}"
-
-
+    
+    def increase_progress(self):
+        """Marks the ticks corresponding to the difficulty rating and saves the object"""
+        self.progress += settings.TICK_PER_DIFFICULTY[self.difficulty]
+        self.save(update_fields=["progress"])
 
 class Debility(models.Model):
     """
@@ -188,7 +196,6 @@ class Debility(models.Model):
     class Meta:
         verbose_name_plural = "Debilities"
     
-
 class CharacterAsset(models.Model):
     """
     An asset owned by a character.

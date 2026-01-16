@@ -11,9 +11,21 @@
         <a class="btn btn-primary" href="{% url 'characters:add-quest' character.id %}">New Quest</a>
     </div>
     {% for quest in quests_list%}
-            <div class="line quest-title">{{ quest }} 
+            <div class="line quest-title">
+                <span class="increase-progress-text">
+                    {% if quest.type == 'journey' %}
+                        <a href="{% url 'characters:increase-progress' character.id %}?type=journey&id={{quest.id}}#quest-{{quest}}" name="quest-{{quest}}" class="ui-link"> 
+                            Reach a Waypoint 
+                        </a>
+                    {% elif quest.type == 'fight' %}
+                        <a href="{% url 'characters:increase-progress' character.id %}?type=journey&id={{quest.id}}#quest-{{quest}}" name="quest-{{quest}}" class="ui-link">
+                            Inflict Harm
+                        </a>
+                    {% endif %}
+                </span>
+                {{ quest }} 
                 <span class="fullfill-vow-text">
-                    <a href="#quest-{{quest.pk}}" class="ui-link">
+                    <a href="#quest-{{quest.id}}" class="ui-link">
                         {% if quest.type == 'journey' %}
                             Reach Your Destination
                         {% elif quest.type == 'fight' %}

@@ -401,4 +401,20 @@ def change_resource(request: HttpRequest, char_id:int):
 
     return redirect("characters:character-sheet", char_id)
 
+def increase_progress(request: HttpRequest, char_id: int):
+    progress_type = request.GET.get("type", "")
+    obj_id = request.GET.get("id", False)
 
+    if not progress_type in {"vow", "journey", "fight"} :
+        return redirect("characters:character-sheet", char_id)
+    
+    if progress_type == "vow":
+        vow = Vow.objects.get(id=obj_id)
+        vow.increase_progress()
+        return redirect("characters:character-sheet", char_id)
+    else:
+        quest = MinorQuest.objects.get(id=obj_id)
+        quest.increase_progress()
+        return redirect("characters:quests-list", char_id)
+
+   

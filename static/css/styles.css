@@ -199,6 +199,12 @@ label {
   opacity: .7;
 }
 
+.increase-progress-text{
+  font-size:  small;
+  float: left;
+  opacity: .7;
+}
+
 .circle {
   width: 10px;
   height: 10px;

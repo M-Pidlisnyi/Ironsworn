@@ -27,6 +27,15 @@ DIFFICULTY_LEVELS = [#order matters
     (5, 'epic'),
 ]
 
+TICK_PER_DIFFICULTY = {
+    5: 1,
+    4: 2,
+    3: 4,
+    2: 8,
+    1: 12
+
+}
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
