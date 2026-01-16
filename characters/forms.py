@@ -110,7 +110,7 @@ class CharacterAssetForm(forms.ModelForm):
 class NewVowForm(forms.ModelForm):
     class Meta:
         model = Vow
-        fields = ["description", "difficulty"]
+        fields = ["title", "description", "difficulty"]
 
 class NewBondForm(forms.ModelForm):
     class Meta:

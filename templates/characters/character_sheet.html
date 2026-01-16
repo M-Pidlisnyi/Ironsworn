@@ -67,9 +67,7 @@
       <div class="section">
         <h3>VOWS</h3>
         {% for vow in character.vows.all %}
-          <div class="vow-tooltip">
-            {{vow.description}}
-          </div>
+
           <div class="vow" id="vow-{{vow.pk}}">
             <div class="line vow-title">{{ vow.title }} <span class="fullfill-vow-text"><a href="#vow-{{vow.pk}}" class="ui-link">Fullfill</a></span></div>
             <div class="rank">
