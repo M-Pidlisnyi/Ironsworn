@@ -10,7 +10,7 @@ from rules.models import AssetDefinition
 
 from .models import Character, Bond, Vow, CharacterAsset, Debility, MinorQuest, CharacterAssetComponent, CharacterAssetAbility
 from .forms import *
-from .mixins import AddCharacterContextMixin, SaveCharacterAttributeMixin
+from .mixins import AddCharacterContextMixin, SaveCharacterAttributeMixin, BelongsToCharacterMixin
 
 CC_STAGES_FORMS = [
     CharBaseInfoForm,
@@ -320,12 +320,8 @@ class CharacterAssetsListView(AddCharacterContextMixin, ListView):
         character_id = self.kwargs.get('char_id')
         return CharacterAsset.objects.filter(character__id=character_id)    
 
-class CharacterBondsList(AddCharacterContextMixin, ListView):
+class CharacterBondsList(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
     model = Bond
-    
-    def get_queryset(self):
-        character_id = self.kwargs.get('char_id')
-        return Bond.objects.filter(character__id=character_id)
     
 class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     model = Bond
@@ -337,8 +333,9 @@ class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateVi
     form_class = NewVowForm
     template_name = 'generic_form.html'
 
-class MinorQuestsListView(AddCharacterContextMixin, ListView):
+class MinorQuestsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
     model = MinorQuest
+    context_object_name = "quests_list"
 
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
@@ -377,8 +374,12 @@ class NewMinorQuestView(AddCharacterContextMixin, SaveCharacterAttributeMixin, C
     form_class = NewMinorQuestForm
     template_name = "generic_form.html"
 
+class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
+    model = Vow
 
-
-
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
+        return context
 
 

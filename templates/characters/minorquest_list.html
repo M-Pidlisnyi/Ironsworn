@@ -10,7 +10,7 @@
         <a class="btn btn-primary" href="{% url 'characters:character-sheet' character.id%}"><=Back to Char Sheet</a>
         <a class="btn btn-primary" href="{% url 'characters:add-quest' character.id %}">New Quest</a>
     </div>
-    {% for quest in character.quests.all%}
+    {% for quest in quests_list%}
             <div class="line quest-title">{{ quest }} 
                 <span class="fullfill-vow-text">
                     <a href="#quest-{{quest.pk}}" class="ui-link">
@@ -22,6 +22,7 @@
                     </a>
                 </span> 
             </div>
+            <div class="quest-description">{{quest.description}}</div>
             <div class="rank">
                 {% for r in difficulty_tracker %}
                     <span class="circle {% if quest.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>

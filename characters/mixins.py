@@ -53,3 +53,10 @@ class SaveCharacterAttributeMixin:
         setattr(obj, self.field_name, character)
         obj.save()
         return redirect('characters:character-sheet', pk=character_id)
+    
+class BelongsToCharacterMixin:
+    url_kwarg = "char_id"
+
+    def get_queryset(self):
+        character_id = self.kwargs.get(self.url_kwarg)
+        return self.model.objects.filter(character__id=character_id) 

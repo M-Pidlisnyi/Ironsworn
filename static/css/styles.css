@@ -153,18 +153,28 @@ label {
 
 .vow-title{
   text-align: center;
-  margin-bottom: 5px;
+  
+  margin-bottom: 0;
 }
 
-
+.vow-description{
+  margin-top: 0;
+  border: 1px solid black;
+}
 
 .quest-title{
   text-align: center;
-  margin-bottom: 15px;
+
   vertical-align: middle;
   display: inline-block;
   width: 70%;
   margin-left: 15%;
+}
+.quest-description{
+  display: inline-block;
+  width: 70%;
+  margin-left: 15%;
+  border: 1px solid black;
 }
 
 .rank{
