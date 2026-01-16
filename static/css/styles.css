@@ -388,3 +388,31 @@ nav a{
 .truth-text{
   padding: 10px;
 }
+
+.event-row{
+  border: 5px solid black;
+  border-bottom: 0;
+  display: flex;
+}
+.event-row:last-of-type{
+  border-bottom: 5px solid black;
+}
+.event-cell {
+  display: flex;
+  margin: 0;
+}
+.event-number{
+  width: 5%;
+  align-items: center;
+  justify-content: center;
+  border-right: 5px solid black;
+  background: #333;
+  color: white;
+}
+.event-text{
+  width: 94%;
+}
+form.event-row{
+  margin-top: 10px;
+  margin-bottom: 50px;
+}

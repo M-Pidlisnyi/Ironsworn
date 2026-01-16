@@ -2,19 +2,17 @@
 
 {% block content %}
     <h2>{{story.title}}</h2>
-    <div>
-        prologue - {{story.prologue}}
+    <div class="event-row">
+        <p class="event-cell event-number"><b>Prologue</b></p> <p class="event-cell event-text">{{story.prologue}}</p>
     </div>
     {% for event in story.events.all %}
-        <div>
-            {{forloop.counter}} - {{event.text}}
+        <div class="event-row">
+            <p class="event-cell event-number">{{forloop.counter}}</p><p class="event-cell event-text">{{event.text|linebreaksbr}}</p>
         </div>
     {% endfor %}
-    <div>
-        <form method="post">
-            {% csrf_token %}
-            <label>next event</label> - <textarea name="text" placeholder="Event text"></textarea>
-            <button type="submit">Write</button> 
-        </form>
-    </div>
+    <form method="post" class="event-row">
+        {% csrf_token %}
+        <label class="event-cell event-number">next event</label><textarea class="event-cell event-text" name="text" placeholder="Event text"></textarea>
+        <button type="submit">Write</button> 
+    </form>
 {% endblock %}
