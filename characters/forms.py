@@ -116,3 +116,9 @@ class NewBondForm(forms.ModelForm):
     class Meta:
         model = Bond
         fields = ["description"]
+
+class CharacterAssetEditForm(forms.Form):
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print(request)
+        #TODO: dynamically create field for each of the CharacterAssets editable components

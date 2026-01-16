@@ -8,7 +8,7 @@
     {% for asset in assets_list %}
         <div class="large-asset-card card">
             {% include 'components/characterasset_cardbody.html' %}
-            <a class="btn btn-secondary">Edit</a>
+            <a href="{% url 'characters:character-asset-edit' character.id asset.id %}" class="btn btn-secondary">Edit</a>
         </div>
         
     {%endfor%}

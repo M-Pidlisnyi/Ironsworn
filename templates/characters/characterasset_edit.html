@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{%block content%}
+<div class="asset-flexbox">
+        <div class="large-asset-card card">
+            {% include 'components/characterasset_cardbody.html' %}
+            <a href="{% url 'characters:character-assets-list' character.id %}" class="btn btn-secondary">Back</a>
+        </div>
+        ->
+        <form method="post" class="large-asset-card card">
+            {% csrf_token %}
+            {{form}}
+            <button type="submit" class="btn btn-secondary">Save</button>
+        </form>
+    
+</div>
+{%endblock%}

@@ -2,7 +2,7 @@ from typing import Any
 from django.db.models.query import QuerySet
 from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -13,7 +13,7 @@ from rules.models import AssetDefinition
 
 from .models import Character, Bond, Vow, CharacterAsset, Debility, MinorQuest
 from .forms import (CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, InitialAssetsForm, 
-                    CharacterAssetForm, NewVowForm, NewBondForm)
+                    CharacterAssetForm, NewVowForm, NewBondForm, CharacterAssetEditForm)
 from .mixins import AddCharacterContextMixin, SaveCharacterAttributeMixin
 
 CC_STAGES_FORMS = [
@@ -347,4 +347,14 @@ class MinorQuestsListView(AddCharacterContextMixin, ListView):
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
+        return context
+    
+class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
+    model = CharacterAsset
+    template_name = "characters/characterasset_edit.html"
+    context_object_name = "asset"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = CharacterAssetEditForm(self.request)
         return context
