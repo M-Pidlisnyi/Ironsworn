@@ -7,27 +7,8 @@
 <div class="asset-flexbox">
     {% for asset in assets_list %}
         <div class="large-asset-card card">
-            <div class="card-body asset-card-body">
-                <h5 class="card-title">{{asset.definition.title}}</h5>
-                <p class="card-text">
-                    <p>{{asset.definition.description}}</p>
-                    {% for component in asset.components.all %}
-                        <p>{{component.definition.title}}: <u>___{{component.value}}___</u></p>
-                    {%endfor%}
-                    <ul style="list-style: circle;">
-                        {% for ability in asset.abilities.all %}
-                            <li
-                                {% if ability.is_active %}
-                                    style="list-style: disc;"
-                                {% endif %}>
-                                    {{ability}}<br>
-                                    {{ability.definition.description}}
-                            </li>   
-
-                        {%endfor%}
-                    </ul>
-                </p>
-            </div>
+            {% include 'components/characterasset_cardbody.html' %}
+            <a class="btn btn-secondary">Edit</a>
         </div>
         
     {%endfor%}

@@ -16,7 +16,7 @@
     </ul>
     <h4>Bonds Progress</h4>
         {% with filled_progress=character.bonds_progress|div:4 partial_amount=character.bonds_progress|modulo:4 %}
-            {% include 'progress_track.html' %}
+            {% include 'components/progress_track.html' %}
         {% endwith %}
     <a  href="{% url 'characters:add-bond' character.pk %}" class="ui-link">Forge a new Bond</a>
 </div>

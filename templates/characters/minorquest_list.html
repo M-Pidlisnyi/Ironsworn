@@ -24,7 +24,7 @@
                 {% endfor %}
             </div>
             {% with filled_progress=quest.progress|div:4 partial_amount=quest.progress|modulo:4 %}
-                {% include "progress_track.html" %}
+                {% include "components/progress_track.html" %}
             {% endwith %}
             </div>
     {% endfor %}
