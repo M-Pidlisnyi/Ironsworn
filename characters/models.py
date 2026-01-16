@@ -31,10 +31,32 @@ class Character(models.Model):
     spirit = models.IntegerField(default=5, verbose_name="Tracker: Spirit")
     supply = models.IntegerField(default=5, verbose_name="Tracker: Supply")
     momentum = models.IntegerField(default=2, verbose_name="Tracker: Momentum")
-    momentum_max = models.IntegerField(default=10, verbose_name="Maximal Momentum")
-    momentum_reset = models.IntegerField(default=2, verbose_name="Momentum Reset value")
-    
+
     experience = models.IntegerField(default=0, verbose_name="Gained experience points", help_text="Spendable on new assets or asset upgrades")
+
+    @property
+    def momentum_reset(self) -> int:
+        """ 
+            - Default is +2
+            - If you have one debility marked, your momentum reset is +1.
+            - If you have more than one debility marked, your momentum reset is 0.
+        """
+        if self.debilities.count() == 1:
+            return 1
+        elif self.debilities.count() > 1:
+            return 0
+        return 2
+    
+    @property
+    def momentum_max(self) -> int:
+        """
+            - Defauls is 10
+            - -1 for each debility marked
+        """
+        value = 10
+        for _ in range(self.debilities.count()):
+            value -= 1
+        return value
 
     @property
     def bonds_progress(self) -> int:

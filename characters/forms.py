@@ -44,9 +44,6 @@ class CharResoursesForm(forms.Form):
     supply = forms.IntegerField(label="Supply", initial=5, disabled=True )
     momentum = forms.IntegerField(label="Momentum", initial=2, disabled=True )
 
-    momentum_max = forms.IntegerField(initial=10, max_value=10, min_value=0, label="Max Momentum")
-    momentum_reset = forms.IntegerField(initial=2, max_value=2, min_value=0, label="Momentum Reset")
-
 class CharInitialBondsForm(forms.Form):
     bond_description_1 = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 3}),
