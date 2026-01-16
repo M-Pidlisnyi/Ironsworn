@@ -33,8 +33,8 @@
     <div class="momentum">
         <div class="momentum-label">MOMENTUM</div>
         <div class="tracker-control-buttons">
-          <button><a href="{% url 'characters:change-resource' character.id %}?resource=momentum&action=down" class="ui-link">-</a></button> 
-          <button><a href="{% url 'characters:change-resource' character.id %}?resource=momentum&action=up" class="ui-link">+</a></button>
+          <button><a href="{% url 'characters:change-resource' character.id %}?resource=momentum&action=down#momentum" class="ui-link" name="momentum">-</a></button> 
+          <button><a href="{% url 'characters:change-resource' character.id %}?resource=momentum&action=up#momentum" class="ui-link" name="momentum">+</a></button>
         </div>
       {% for i in momentum_tracker %}
         <div class="tick {% if character.momentum == i %}active-momentum{% endif %}">
@@ -174,19 +174,11 @@
         <div class="status-block">
           <div class="status-label">{{ label }} </div>
           <div class="tracker-control-buttons">
-            <button><a href="{% url 'characters:change-resource' character.id %}?resource={{label|lower}}&action=down" class="ui-link">-</a></button> 
-            <button><a href="{% url 'characters:change-resource' character.id %}?resource={{label|lower}}&action=up" class="ui-link">+</a></button>
+            <button><a href="{% url 'characters:change-resource' character.id %}?resource={{label|lower}}&action=down#{{label}}" class="ui-link" name="{{label}}">-</a></button> 
+            <button><a href="{% url 'characters:change-resource' character.id %}?resource={{label|lower}}&action=up#{{label}}" class="ui-link" name="{{label}}">+</a></button>
           </div>
           {% for i in status_tracker %}
-            <div class="tick {% if value == i %}
-                    {% if label == 'HEALTH' %}
-                        active-health
-                    {% elif label == 'SPIRIT' %}
-                        active-spirit
-                    {% elif label == 'SUPPLY' %}
-                        active-supply
-                    {% endif %}
-            {% endif %}">
+            <div class="tick {% if value == i %} active-{{label|lower}} {% endif %}">
               {{ i }}
             </div>
           {% endfor %}
