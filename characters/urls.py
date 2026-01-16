@@ -15,5 +15,6 @@ urlpatterns = [
     path('<int:char_id>/add-bond/', views.NewBondView.as_view(), name='add-bond'),
     path('<int:char_id>/add-vow/', views.NewVowView.as_view(), name='add-vow'),
     path('<int:char_id>/quests/', views.MinorQuestsListView.as_view(), name='quests-list'),
-    path('<int:char_id>/asset/<int:pk>/edit', views.CharacterAssetEditView.as_view(), name='character-asset-edit')
+    path('<int:char_id>/asset/<int:pk>/edit', views.CharacterAssetEditView.as_view(), name='character-asset-edit'),
+    path('<int:char_id>/quest/add', views.NewMinorQuestView.as_view(), name="add-quest")
 ]

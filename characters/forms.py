@@ -1,5 +1,5 @@
 from django import forms
-from .models import Character, Vow, CharacterAsset, Bond
+from .models import Character, Vow, CharacterAsset, Bond, MinorQuest
 from rules.models import AssetDefinition
 
 class CharBaseInfoForm(forms.Form):
@@ -100,8 +100,6 @@ class InitialAssetsForm(forms.Form):
         self.fields['asset_definition_2'].choices = choices
         self.fields['asset_definition_3'].choices = choices
 
-
-
 class CharacterAssetForm(forms.ModelForm):
     class Meta:
         model = CharacterAsset
@@ -132,3 +130,8 @@ class CharacterAssetEditForm(forms.Form):
                     initial=ability.is_active,
                     required=False)
             
+class NewMinorQuestForm(forms.ModelForm):
+    class Meta:
+        model = MinorQuest
+        fields = ["type", "difficulty", "title", "description"]
+

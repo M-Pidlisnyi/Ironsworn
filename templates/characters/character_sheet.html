@@ -84,19 +84,20 @@
       </div>
 
       <!-- MINOR QUESTS -->
-      {% if character.quests.exists %}
+      
       <div class="section">
         <h3>QUESTS</h3>
-        {% with quest=character.quests.last %}
-            <div class="line vow-title">{{ quest.title }}</div>
-            {% with filled_progress=quest.progress|div:4 partial_amount=quest.progress|modulo:4 %}
-              {% include "components/progress_track.html" %}
-            {% endwith %}
-        {% endwith %}
+        {% if character.quests.exists %}
+          {% with quest=character.quests.last %}
+              <div class="line vow-title">{{ quest.title }}</div>
+              {% with filled_progress=quest.progress|div:4 partial_amount=quest.progress|modulo:4 %}
+                {% include "components/progress_track.html" %}
+              {% endwith %}
+          {% endwith %}
+        {% endif %}
         <p style="text-align: center;"><a  href="{% url 'characters:quests-list' character.pk %}" class="ui-link">Manage Quests</a></p>
       </div>
-      {% endif %}
-
+     
       <!-- DEBILITIES -->
       <div class="section">
        

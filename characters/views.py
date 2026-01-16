@@ -1,6 +1,3 @@
-from typing import Any
-from django.db.models.query import QuerySet
-from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
 from django.http import HttpRequest, HttpResponse
@@ -12,8 +9,7 @@ from domain import progress_track as pt
 from rules.models import AssetDefinition
 
 from .models import Character, Bond, Vow, CharacterAsset, Debility, MinorQuest, CharacterAssetComponent, CharacterAssetAbility
-from .forms import (CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, InitialAssetsForm, 
-                    CharacterAssetForm, NewVowForm, NewBondForm, CharacterAssetEditForm)
+from .forms import *
 from .mixins import AddCharacterContextMixin, SaveCharacterAttributeMixin
 
 CC_STAGES_FORMS = [
@@ -216,7 +212,7 @@ class CharacterSheetView(DetailView):
     model = Character
     template_name = 'characters/character_sheet.html'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         context  = super().get_context_data(**kwargs)
         
         character:Character = self.get_object() # type: ignore
@@ -375,3 +371,14 @@ class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
                 edited_ability.save()
 
         return redirect("characters:character-assets-list", char_id=self.get_object().character.id)
+    
+class NewMinorQuestView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+    model = MinorQuest
+    form_class = NewMinorQuestForm
+    template_name = "generic_form.html"
+
+
+
+
+
+

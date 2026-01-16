@@ -22,6 +22,10 @@ label {
   gap: 20px;
 }
 
+.button-group{
+  margin: 15px;
+}
+
 .line {
   border: 1px solid #333;
   height: fit-content;

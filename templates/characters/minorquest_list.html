@@ -6,6 +6,10 @@
 {% block content %}
     <h5>Progress track worksheet</h5>
     <h3>{{character}}'s minor quests</h3>
+    <div class="button-group">
+        <a class="btn btn-primary" href="{% url 'characters:character-sheet' character.id%}"><=Back to Char Sheet</a>
+        <a class="btn btn-primary" href="{% url 'characters:add-quest' character.id %}">New Quest</a>
+    </div>
     {% for quest in character.quests.all%}
             <div class="line quest-title">{{ quest }} 
                 <span class="fullfill-vow-text">
