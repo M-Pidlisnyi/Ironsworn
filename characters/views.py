@@ -11,7 +11,7 @@ from domain import progress_track as pt
 
 from rules.models import AssetDefinition
 
-from .models import Character, Bond, Vow, CharacterAsset, Debility, MinorQuest
+from .models import Character, Bond, Vow, CharacterAsset, Debility, MinorQuest, CharacterAssetComponent, CharacterAssetAbility
 from .forms import (CharBaseInfoForm, CharStatsForm, CharResoursesForm, CharInitialBondsForm, BackgroungVowForm, InitialAssetsForm, 
                     CharacterAssetForm, NewVowForm, NewBondForm, CharacterAssetEditForm)
 from .mixins import AddCharacterContextMixin, SaveCharacterAttributeMixin
@@ -356,5 +356,22 @@ class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = CharacterAssetEditForm(self.request)
+        context["form"] = CharacterAssetEditForm(self.get_object())
         return context
+    
+    def post(self, request: HttpRequest, *args, **kwargs):
+        asset:CharacterAsset = self.get_object()
+        
+        print(request.POST)
+        for key, value in request.POST.items():
+            if key.startswith("component_"):
+                edited_component:CharacterAssetComponent = asset.components.get(definition__title=key.replace("component_", ""))
+                edited_component.value = value
+                edited_component.save()
+            elif key.startswith("ability_"):
+                #only inactive abilities can be turned on, you can't turn off already activated ability
+                edited_ability:CharacterAssetAbility = asset.abilities.get(definition__title=key.replace("ability_", ""))
+                edited_ability.is_active = True
+                edited_ability.save()
+
+        return redirect("characters:character-assets-list", char_id=self.get_object().character.id)

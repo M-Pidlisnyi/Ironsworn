@@ -198,6 +198,14 @@ label {
  
 }
 
+.asset-flexbox-edit{
+  justify-content: center;
+}
+
+.asset-edit-arrow{
+  font-size: xx-large;
+}
+
 .small-asset-card-wrapper {
   position: relative;
 }

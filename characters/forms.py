@@ -118,7 +118,17 @@ class NewBondForm(forms.ModelForm):
         fields = ["description"]
 
 class CharacterAssetEditForm(forms.Form):
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, character_asset, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(request)
-        #TODO: dynamically create field for each of the CharacterAssets editable components
+        for component in character_asset.components.all():
+            self.fields["component_"+component.definition.title] = forms.CharField(
+                label=component.definition.title,   
+                initial=component.value)
+        
+        for ability in character_asset.abilities.all():
+            if not ability.is_active:
+                self.fields["ability_"+ability.definition.title] = forms.BooleanField(
+                    label=ability.definition.title,
+                    initial=ability.is_active,
+                    required=False)
+            

@@ -1,16 +1,24 @@
 {% extends 'base.html' %}
 
 {%block content%}
-<div class="asset-flexbox">
+<div class="asset-flexbox-edit asset-flexbox">
         <div class="large-asset-card card">
             {% include 'components/characterasset_cardbody.html' %}
             <a href="{% url 'characters:character-assets-list' character.id %}" class="btn btn-secondary">Back</a>
         </div>
-        ->
+        <span class="asset-edit-arrow">===></span>
         <form method="post" class="large-asset-card card">
             {% csrf_token %}
-            {{form}}
-            <button type="submit" class="btn btn-secondary">Save</button>
+            <div class="card-body asset-card-body">
+                <h5 class="card-title">{{asset.definition.title}}</h5>
+                <p class="card-text">
+                    <p>{{asset.definition.description}}</p>
+                    {% for field in form %}
+                        <p><label>{{field.label}}</label>  {{field}}</p>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-secondary">Save</button>
+                </p>
+            </div>
         </form>
     
 </div>

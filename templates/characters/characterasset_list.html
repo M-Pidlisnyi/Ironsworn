@@ -2,6 +2,9 @@
 
 {%block content%}
 <div class="btn btn-primary add-asset-btn">
+       <a href="{% url 'characters:character-sheet' character.pk %}"> <= Back to Char Sheet </a>
+</div>
+<div class="btn btn-primary add-asset-btn">
        <a href="{% url 'characters:add-asset' character.pk %}"> Add Asset </a>
 </div>
 <div class="asset-flexbox">
