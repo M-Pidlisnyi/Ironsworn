@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
@@ -12,6 +13,20 @@ class StoriesListView(ListView):
     model = Story
     template_name = "gameplay/stories_list.html"
     context_object_name = "stories_list"
+
+    def get_queryset(self):
+        user = self.request.user
+        user_worlds = user.world_set.all()#type:ignore
+        stories = []
+        for world in user_worlds:
+            stories += world.story_set.all()
+        return stories
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["worlds_list"] = self.request.user.world_set.all()#type: ignore
+        return context
+
 
 class StoryDetailView(DetailView):
     model = Story

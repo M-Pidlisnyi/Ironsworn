@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
 {%block content%}
-{% for story in stories_list%}
-    <a href="{% url 'gameplay:story-detail' story.pk %}">{{story}}</a>
+{% for world in worlds_list%}
+    <h2>{{world}}</h2>
+    {% for story in world.story_set.all %}
+        <a href="{% url 'gameplay:story-detail' story.pk %}">{{story}}</a>
+        <br>
+    {% endfor %}
 {%endfor%}
 
 {%endblock%}

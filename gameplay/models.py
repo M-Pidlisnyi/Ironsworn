@@ -17,6 +17,9 @@ class Story(models.Model):
 
     class Meta:
         verbose_name_plural = "Stories"
+        ordering = ["world", "title"]
+
+    
 
 class Event(models.Model):
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name="events")
@@ -34,6 +37,8 @@ class Event(models.Model):
     class Meta:
         ordering = ["story", "created_at"]
     
+    def __str__(self) -> str:
+        return f"{self.story}: {self.text[:30]}..."
 
 class StoryParticipant(models.Model):
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
