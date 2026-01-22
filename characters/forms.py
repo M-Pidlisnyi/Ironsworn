@@ -107,7 +107,8 @@ class NewVowForm(forms.ModelForm):
         model = Vow
         fields = ["title", "description", "difficulty"]
 
-class NewBondForm(forms.ModelForm):
+class BondForm(forms.ModelForm):
+    description = forms.CharField(label="Bond description")
     class Meta:
         model = Bond
         fields = ["description"]

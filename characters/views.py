@@ -1,8 +1,10 @@
+from typing import Any
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.urls import reverse
 
 from domain import progress_track as pt
 
@@ -325,8 +327,26 @@ class CharacterBondsList(BelongsToCharacterMixin, AddCharacterContextMixin, List
     
 class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     model = Bond
-    form_class = NewBondForm
+    form_class = BondForm
     template_name = 'generic_form.html'
+
+class UpdateBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+    model = Bond
+    form_class = BondForm
+    template_name = "characters/bond_list.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["edit_id"] = self.kwargs["pk"]
+
+        #not available in update view by default, provided by courtesy of `BelongsToCharacterMixin`
+        context["bond_list"] = self.get_queryset()
+
+        return context
+
+    def get_success_url(self) -> str:
+        return reverse("characters:character-bonds-list", kwargs={"char_id": self.kwargs["char_id"]})
+    
 
 class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     model = Vow

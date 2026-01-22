@@ -12,6 +12,7 @@ urlpatterns = [
     path('<int:char_id>/add-asset/', views.AddAssetView.as_view(), name='add-asset'),
     path('<int:char_id>/assets/', views.CharacterAssetsListView.as_view(), name='character-assets-list'),
     path('<int:char_id>/bonds/', views.CharacterBondsList.as_view(), name='character-bonds-list'),
+    path('<int:char_id>/bond/edit/<int:pk>', views.UpdateBondView.as_view(), name='edit-bond'),
     path('<int:char_id>/add-bond/', views.NewBondView.as_view(), name='add-bond'),
     path('<int:char_id>/add-vow/', views.NewVowView.as_view(), name='add-vow'),
     path('<int:char_id>/quests/', views.MinorQuestsListView.as_view(), name='quests-list'),

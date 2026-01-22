@@ -4,13 +4,22 @@
 
 {%block content%}
 <div class="bonds-page">
+     <a class="btn btn-primary" href="{% url 'characters:character-sheet' character.id%}"><=Back to Char Sheet</a>
     <h3>{{character.name}} is bound to:</h3>
     <ul class="bonds-list">
     {% for bond in bond_list %}
         <li>
+            {% if edit_id == bond.id %}
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_div}}
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+            {% else %}
             <div>
-                {{bond.description}}
+                {{bond.description}} <a class="ui-link" href="{% url 'characters:edit-bond' character.id bond.id %}">✏</a>
             </div>
+            {% endif %}
         </li>
     {%endfor%}
     </ul>
