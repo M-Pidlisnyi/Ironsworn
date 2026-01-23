@@ -411,6 +411,24 @@ class NewMinorQuestView(AddCharacterContextMixin, SaveCharacterAttributeMixin, C
     form_class = NewMinorQuestForm
     template_name = "generic_form.html"
 
+class EditMinorQuestView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+    model = MinorQuest
+    form_class = EditMinorQuestForm
+    template_name = "characters/minorquest_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["edit_id"] = self.kwargs["pk"]
+        context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
+
+        #not available in update view by default, provided by courtesy of `BelongsToCharacterMixin`
+        context["quests_list"] = self.get_queryset()
+
+        return context
+
+    def get_success_url(self) -> str:
+        return reverse("characters:quests-list", kwargs={"char_id": self.kwargs["char_id"]})
+
 class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
     model = Vow
 

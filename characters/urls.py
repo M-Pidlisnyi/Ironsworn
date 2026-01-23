@@ -18,6 +18,7 @@ urlpatterns = [
     path('<int:char_id>/quests/', views.MinorQuestsListView.as_view(), name='quests-list'),
     path('<int:char_id>/asset/<int:pk>/edit', views.CharacterAssetEditView.as_view(), name='character-asset-edit'),
     path('<int:char_id>/quest/add', views.NewMinorQuestView.as_view(), name="add-quest"),
+    path('<int:char_id>/quest/<int:pk>/edit/', views.EditMinorQuestView.as_view(), name="edit-quest"),
     path('<int:char_id>/vows/', views.CharacterVowsListView.as_view(), name="vows-list"),
     path('<int:char_id>/vow/<int:pk>/edit/', views.EditVowView.as_view(), name="edit-vow"),
     path('<int:char_id>/change/', views.change_resource, name="change-resource"),

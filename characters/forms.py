@@ -150,3 +150,17 @@ class NewMinorQuestForm(forms.ModelForm):
         model = MinorQuest
         fields = ["type", "difficulty", "title", "description"]
 
+class EditMinorQuestForm(forms.ModelForm):
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "class": "line quest-title"
+        })
+    )
+    description = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "class": "quest-description"
+        })
+    )
+    class Meta:
+        model = MinorQuest
+        fields = ["title", "description"]

@@ -8,9 +8,23 @@
     <h3>{{character}}'s minor quests</h3>
     <div class="button-group">
         <a class="btn btn-primary" href="{% url 'characters:character-sheet' character.id%}"><=Back to Char Sheet</a>
-        <a class="btn btn-primary" href="{% url 'characters:add-quest' character.id %}">New Quest</a>
+        
     </div>
     {% for quest in quests_list%}
+        {% if edit_id == quest.id %}
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    {{field}}
+                </div>
+            {% endfor %}
+            <div class="vow-edit-field">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+        {% else %}
+        <div>
             <div class="line quest-title">
                 <span class="increase-progress-text">
                     {% if quest.type == 'journey' %}
@@ -34,7 +48,10 @@
                     </a>
                 </span> 
             </div>
-            <div class="quest-description">{{quest.description}}</div>
+            <div class="quest-description">
+                {{quest.description}}
+                <a href="{% url 'characters:edit-quest' character.id quest.id %}" class="ui-link vow-edit-btn">✏</a>
+            </div>
             <div class="rank">
                 {% for r in difficulty_tracker %}
                     <span class="circle {% if quest.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
@@ -43,7 +60,11 @@
             {% with filled_progress=quest.progress|div:4 partial_amount=quest.progress|modulo:4 %}
                 {% include "components/progress_track.html" %}
             {% endwith %}
-            </div>
+        </div>
+        {% endif %}
     {% endfor %}
+    <div class="quest-title">
+        <a class="ui-link" href="{% url 'characters:add-quest' character.id %}">Undertake a Journey/Enter the Fray</a>
+    </div>
 {% endblock %}
     
