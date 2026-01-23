@@ -23,4 +23,5 @@ urlpatterns = [
     path('<int:char_id>/vow/<int:pk>/edit/', views.EditVowView.as_view(), name="edit-vow"),
     path('<int:char_id>/change/', views.change_resource, name="change-resource"),
     path('<int:char_id>/progress', views.increase_progress, name="increase-progress"),
+    path('<int:char_id>/exp/',views.change_experience, name="change-exp")
 ]

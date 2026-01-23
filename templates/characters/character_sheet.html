@@ -19,10 +19,13 @@
     <div class="experience">
       <label>EXPERIENCE</label>
       <div class="xp-dots">
+        <button class="exp-btn spend-exp-btn"> <a href="{% url 'characters:change-exp' character.id %}?action=spend" class="ui-link">X</a> </button>
         {% for i in "01234567890123456789" %}
-          <span class="dot {% if forloop.counter <= character.experience %}filled{% endif %}"></span>
+          <span class="dot {% if forloop.counter <= character.experience %}filled{% endif %}">
+            {% if forloop.counter <= character.spent_experience %}X{% endif %}
+          </span>
         {% endfor %}
-        
+        <button class="exp-btn spend-exp-btn"><a href="{% url 'characters:change-exp' character.id %}?action=gain" class="ui-link">+</a></button>
       </div>
     </div>
   </div>

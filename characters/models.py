@@ -1,4 +1,5 @@
-from django.db import models
+from django.db import IntegrityError, models
+from django.db.models import Q, F
 from django.contrib.auth.models import User
 from django.conf import settings
 
@@ -33,6 +34,7 @@ class Character(models.Model):
     momentum = models.IntegerField(default=2, verbose_name="Tracker: Momentum")
 
     experience = models.IntegerField(default=0, verbose_name="Gained experience points", help_text="Spendable on new assets or asset upgrades")
+    spent_experience = models.IntegerField(default=0, verbose_name="Alredy spent experience points")
 
     @property
     def momentum_reset(self) -> int:
@@ -67,10 +69,22 @@ class Character(models.Model):
         return self.name
     
     def change_momentum(self, delta:int):
-        min_v, max_v = settings.MOMENTUM_TRACK[-1], settings.MOMENTUM_TRACK[0]
+        min_v, max_v = settings.MOMENTUM_TRACK[-1], self.momentum_max
         value = max(min(self.momentum + delta, max_v), min_v)
         self.momentum = value
         self.save(update_fields=["momentum"])
+
+    def change_experience(self, action:str):
+        try:
+            if action == "gain":
+                self.experience += 1
+                self.save(update_fields=["experience"])
+            elif action == "spend":
+                self.spent_experience += 1
+                self.save(update_fields=["spent_experience"])
+        except IntegrityError as e:
+            print(e)
+        
 
     def change_resource(self, resource:str, delta:int):
         if not resource in {"health", "spirit", "supply"}:
@@ -80,6 +94,18 @@ class Character(models.Model):
         value = max(min(getattr(self, resource) + delta, max_v), min_v)
         setattr(self, resource, value)
         self.save(update_fields=[resource])
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint( 
+                condition = Q(spent_experience__lte=F('experience')), 
+                name='spent_experience_lte_experience'
+            ),
+            models.CheckConstraint(
+                condition=Q(experience__lte=20),
+                name="experience_lte_MAX_EXPERIENCE"
+            )
+        ]
 
 class Vow(models.Model):
     """

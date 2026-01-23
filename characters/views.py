@@ -456,6 +456,17 @@ def change_resource(request: HttpRequest, char_id:int):
 
     return redirect("characters:character-sheet", char_id)
 
+def change_experience(request:HttpRequest, char_id:int):
+    action = request.GET.get("action")
+
+    if action not in {"gain", "spend"}:
+        return redirect("characters:character-sheet", char_id)
+    
+    character = Character.objects.get(id=char_id)
+    character.change_experience(action)#saving is done inisde the method
+
+    return redirect("characters:character-sheet", char_id)
+
 def increase_progress(request: HttpRequest, char_id: int):
     progress_type = request.GET.get("type", "")
     obj_id = request.GET.get("id", False)
@@ -472,4 +483,4 @@ def increase_progress(request: HttpRequest, char_id: int):
         quest.increase_progress()
         return redirect("characters:quests-list", char_id)
 
-   
+

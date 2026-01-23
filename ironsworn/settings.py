@@ -18,6 +18,7 @@ from pathlib import Path
 MOMENTUM_TRACK = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6]
 RESOURCE_TRACK = [5, 4, 3, 2, 1]
 
+
 #difficuly rating as definded in Ironsword rulebook
 DIFFICULTY_LEVELS = [#order matters
     (1, 'troublesome'),
