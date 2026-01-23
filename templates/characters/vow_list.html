@@ -7,20 +7,46 @@
 <h3>{{character.name|upper}}'S VOWS</h3>
 <div class="button-group">
     <a class="btn btn-primary" href="{% url 'characters:character-sheet' character.id%}"><=Back to Char Sheet</a>
-    <a class="btn btn-primary" href="{% url 'characters:add-vow' character.id %}">New Vow</a>
+    
 </div>
 {% for vow in vow_list %}
-    <div class="vow" id="vow-{{vow.pk}}">
-    <div class="line vow-title">{{ vow.title }} <span class="fullfill-vow-text"><a href="#vow-{{vow.pk}}" class="ui-link">Fullfill</a></span></div>
-    <div class="vow-description">{{vow.description}}</div>
-    <div class="rank">
-        {% for r in difficulty_tracker %}
-        <span class="circle {% if vow.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
+    {% if edit_id == vow.id %}
+    <form method="post" class="vow" id="vow-{{vow.pk}}">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="vow-edit-field">
+                {{field}}
+            </div>
         {% endfor %}
-    </div>
-    {% with filled_progress=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
-        {% include "components/progress_track.html" %}
-    {% endwith %}
-    </div>
+        <div class="vow-edit-field">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+        <div class="rank">
+            {% for r in difficulty_tracker %}
+            <span class="circle {% if vow.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
+            {% endfor %}
+        </div>
+        {% with filled_progress=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
+            {% include "components/progress_track.html" %}
+        {% endwith %}
+    </form>
+    {% else %}
+        <div class="vow" id="vow-{{vow.pk}}">
+            <div class="line vow-title">{{ vow.title }} <span class="fullfill-vow-text"><a href="#vow-{{vow.pk}}" class="ui-link">Fullfill</a></span></div>
+            <div class="vow-description">{{vow.description}} <a href="{% url 'characters:edit-vow' character.id vow.id %}" class="ui-link vow-edit-btn">✏</a></div>
+            <div class="rank">
+                {% for r in difficulty_tracker %}
+                <span class="circle {% if vow.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
+                {% endfor %}
+            </div>
+            {% with filled_progress=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
+                {% include "components/progress_track.html" %}
+            {% endwith %}
+        </div>
+    {% endif %}
 {% endfor %}
+<hr>
+<div class="vow-title">
+    <a class="ui-link" href="{% url 'characters:add-vow' character.id %}">Swear new Iron Vow</a>
+</div>
 {% endblock %}

@@ -107,6 +107,23 @@ class NewVowForm(forms.ModelForm):
         model = Vow
         fields = ["title", "description", "difficulty"]
 
+class EditVowForm(forms.ModelForm):
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "class": "line-vow-title-edit",
+            "size": 150
+            })
+        )
+    description = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "class": "vow-description-edit",
+            "size": 150
+            })
+        )
+    class Meta:
+        model = Vow
+        fields = ["title", "description"]
+
 class BondForm(forms.ModelForm):
     description = forms.CharField(label="Bond description")
     class Meta:

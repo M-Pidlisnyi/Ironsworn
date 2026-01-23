@@ -330,7 +330,7 @@ class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateV
     form_class = BondForm
     template_name = 'generic_form.html'
 
-class UpdateBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+class EditBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
     model = Bond
     form_class = BondForm
     template_name = "characters/bond_list.html"
@@ -347,11 +347,28 @@ class UpdateBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateVi
     def get_success_url(self) -> str:
         return reverse("characters:character-bonds-list", kwargs={"char_id": self.kwargs["char_id"]})
     
-
 class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     model = Vow
     form_class = NewVowForm
     template_name = 'generic_form.html'
+
+class EditVowView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+    model = Vow
+    form_class = EditVowForm
+    template_name = 'characters/vow_list.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["edit_id"] = self.kwargs["pk"]
+        context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
+
+        #not available in update view by default, provided by courtesy of `BelongsToCharacterMixin`
+        context["vow_list"] = self.get_queryset()
+
+        return context
+
+    def get_success_url(self) -> str:
+        return reverse("characters:vows-list", kwargs={"char_id": self.kwargs["char_id"]})
 
 class MinorQuestsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
     model = MinorQuest

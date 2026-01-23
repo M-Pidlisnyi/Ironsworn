@@ -169,10 +169,35 @@ label {
   margin-bottom: 0;
 }
 
+.line-vow-title-edit {
+  border: 1px solid #333;
+  height: fit-content;
+  padding-left: 5px;
+  background-color: gainsboro;
+  margin-bottom: 1px;
+  text-align: center;
+}
+
+.vow-edit-btn{
+  float: right;
+}
+
+.vow-edit-field{
+  display: flex;
+  justify-content: center;
+}
+
 .vow-description{
   margin-top: 0;
   border: 1px solid black;
 }
+
+.vow-description-edit{
+  margin-top: 0;
+  margin-bottom: 10px;
+  border: 1px solid black;
+}
+
 
 .quest-title{
   text-align: center;
