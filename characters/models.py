@@ -18,7 +18,7 @@ class Character(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="characters")#keep Character and all game data user-scoped
 
     name = models.CharField(max_length=100)
-    description = models.TextField(verbose_name="Character's descrption and/or background")
+    description = models.TextField(verbose_name="Character's description and/or background")
 
     # stats
     edge = models.IntegerField(default=0, verbose_name="Stat: Edge")
@@ -34,7 +34,7 @@ class Character(models.Model):
     momentum = models.IntegerField(default=2, verbose_name="Tracker: Momentum")
 
     experience = models.IntegerField(default=0, verbose_name="Gained experience points", help_text="Spendable on new assets or asset upgrades")
-    spent_experience = models.IntegerField(default=0, verbose_name="Alredy spent experience points")
+    spent_experience = models.IntegerField(default=0, verbose_name="Already spent experience points")
 
     @property
     def momentum_reset(self) -> int:
@@ -52,7 +52,7 @@ class Character(models.Model):
     @property
     def momentum_max(self) -> int:
         """
-            - Defauls is 10
+            - Default is 10
             - -1 for each debility marked
         """
         value = 10
@@ -69,12 +69,25 @@ class Character(models.Model):
         return self.name
     
     def change_momentum(self, delta:int):
+        """
+        Adjust the character's momentum by a delta value.
+
+        Clamps the new momentum value between the minimum (hardest) and
+        maximum (soft) bounds defined by the character's current state.
+        """
         min_v, max_v = settings.MOMENTUM_TRACK[-1], self.momentum_max
         value = max(min(self.momentum + delta, max_v), min_v)
         self.momentum = value
         self.save(update_fields=["momentum"])
 
     def change_experience(self, action:str):
+        """
+        Modify experience points based on action.
+
+        Args:
+            action (str): Either "gain" to increment experience, or "spend" to
+                increment spent_experience. Invalid actions are silently ignored.
+        """
         try:
             if action == "gain":
                 self.experience += 1
@@ -87,6 +100,19 @@ class Character(models.Model):
         
 
     def change_resource(self, resource:str, delta:int):
+        """
+        Adjust a character resource tracker by a delta value.
+
+        Args:
+            resource (str): One of "health", "spirit", or "supply".
+            delta (int): The amount to adjust the resource by (positive or negative).
+
+        Raises:
+            AttributeError: If resource is not one of the valid resource types.
+
+        The new value is clamped between the minimum and maximum bounds defined
+        by settings.RESOURCE_TRACK.
+        """
         if not resource in {"health", "spirit", "supply"}:
             raise AttributeError(f"Invalid resource: {resource}")
         
@@ -127,7 +153,12 @@ class Vow(models.Model):
         return f"{self.character.name} vowed to {self.title}"
     
     def increase_progress(self):
-        """Marks the ticks corresponding to the difficulty rating and saves the object"""
+        """
+        Increment vow progress based on its difficulty rating.
+
+        Marks the number of ticks corresponding to the vow's difficulty level
+        and saves the object
+        """
         self.progress += settings.TICK_PER_DIFFICULTY[self.difficulty]
         self.save(update_fields=["progress"])
     
@@ -172,7 +203,7 @@ class MinorQuest(models.Model):
 
     progress = models.IntegerField(default=0, help_text="ticks, not progress boxes")
 
-    modified_at = models.DateTimeField(auto_now=True, help_text="used to display last modifed quet on charsheet")
+    modified_at = models.DateTimeField(auto_now=True, help_text="Automatically updated; used to display last modified quest on character sheet")
 
     class Meta:
         ordering = ["modified_at"]
@@ -181,7 +212,12 @@ class MinorQuest(models.Model):
         return f"{self.type.capitalize()}: {self.title}"
     
     def increase_progress(self):
-        """Marks the ticks corresponding to the difficulty rating and saves the object"""
+        """
+        Increment quest progress based on its difficulty rating.
+
+        Marks the number of ticks corresponding to the quest's difficulty level
+        and saves the object.
+        """
         self.progress += settings.TICK_PER_DIFFICULTY[self.difficulty]
         self.save(update_fields=["progress"])
 
@@ -231,6 +267,9 @@ class CharacterAsset(models.Model):
     :model:`rules.AssetDefinition` and serves as the root container
     for character-specific asset state such as abilities and components.
 
+    When instantiated, the ``populate_character_assets`` signal handler
+    automatically creates related ability and component instances based
+    on the asset definition.
     """
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='assets')
     definition = models.ForeignKey('rules.AssetDefinition', on_delete=models.CASCADE)
@@ -271,7 +310,7 @@ class CharacterAssetComponent(models.Model):
     """
     character_asset = models.ForeignKey(CharacterAsset, on_delete=models.CASCADE, related_name='components')
     definition = models.ForeignKey('rules.AssetComponentDefinition', on_delete=models.CASCADE)
-    value = models.CharField(max_length=20, null=True, blank=True)
+    value = models.CharField(max_length=20, null=True, blank=True, help_text="Custom value such as companion name, deity name, or track state")
 
     class Meta:
         unique_together = ('character_asset', 'definition')

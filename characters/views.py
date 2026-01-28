@@ -98,7 +98,29 @@ def character_creation(request: HttpRequest):
 
     return render(request, 'characters/character_creation.html', {'form': form})
 
+@login_required
 def save_character(request: HttpRequest) -> HttpResponse:
+    """
+    Create a character from accumulated session data after character creation is complete.
+
+    This view finalizes the multi-stage character creation workflow by extracting
+    character data from the session, creating the :model:`characters.Character`
+    instance, and initializing all related objects (bonds, vow, assets).
+
+    Character data is extracted from ``request.session['char_creation_data']``,
+    which should have been populated by preceding stages in the ``character_creation()``
+    view.
+
+    Related objects are created as follows:
+    - Bond objects are created for up to 3 non-empty bond descriptions
+    - A Vow object is created with initial progress of 0, if a vow was entered
+    - CharacterAsset objects are created for each selected asset definition
+
+    After successful creation, the session data is cleared and the user is
+    redirected to the newly created character's sheet.
+
+    **Requires authentication.**
+    """
     data:dict = request.session.get('char_creation_data', {})
     
     # Extract bond descriptions from data (they shouldn't be saved to Character model)
@@ -323,14 +345,36 @@ class CharacterAssetsListView(AddCharacterContextMixin, ListView):
         return CharacterAsset.objects.filter(character__id=character_id)    
 
 class CharacterBondsList(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
+    """
+    Display the list of bonds for a character.
+
+    This view lists all :model:`characters.Bond` instances
+    associated with a specific :model:`characters.Character`.
+
+    The character is identified by the ``char_id`` URL parameter.
+    """
     model = Bond
     
 class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+    """
+    Create a new bond for a character.
+
+    This view allows a player to create a new :model:`characters.Bond`,
+    attaching it to a specific :model:`characters.Character`.
+
+    The character is identified by the ``char_id`` URL parameter.
+    """
     model = Bond
     form_class = BondForm
     template_name = 'generic_form.html'
 
 class EditBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+    """
+    Edit an existing bond.
+
+    This view allows updating a :model:`characters.Bond` belonging to a character.
+    The character is identified by the ``char_id`` URL parameter.
+    """
     model = Bond
     form_class = BondForm
     template_name = "characters/bond_list.html"
@@ -348,11 +392,26 @@ class EditBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView
         return reverse("characters:character-bonds-list", kwargs={"char_id": self.kwargs["char_id"]})
     
 class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+    """
+    Create a new vow for a character.
+
+    This view allows a player to create a new :model:`characters.Vow`,
+    attaching it to a specific :model:`characters.Character`.
+
+    The character is identified by the ``char_id`` URL parameter.
+    """
     model = Vow
     form_class = NewVowForm
     template_name = 'generic_form.html'
 
 class EditVowView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+    """
+    Edit an existing vow.
+
+    This view allows updating a :model:`characters.Vow` belonging to a character.
+    The character is identified by the ``char_id`` URL parameter.
+    Provides difficulty_tracker in context for rendering progress track UI.
+    """
     model = Vow
     form_class = EditVowForm
     template_name = 'characters/vow_list.html'
@@ -371,6 +430,15 @@ class EditVowView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView)
         return reverse("characters:vows-list", kwargs={"char_id": self.kwargs["char_id"]})
 
 class MinorQuestsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
+    """
+    Display the list of minor quests for a character.
+
+    This view lists all :model:`characters.MinorQuest` instances
+    (journeys and fights) associated with a specific :model:`characters.Character`.
+
+    The character is identified by the ``char_id`` URL parameter.
+    Provides difficulty_tracker in context for rendering progress track UI.
+    """
     model = MinorQuest
     context_object_name = "quests_list"
 
@@ -380,6 +448,17 @@ class MinorQuestsListView(BelongsToCharacterMixin, AddCharacterContextMixin, Lis
         return context
     
 class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
+    """
+    Display and edit a character's asset abilities and components.
+
+    This view displays a :model:`characters.CharacterAsset` and allows updating
+    ability activation states and component values via POST requests.
+
+    Only inactive abilities can be activated; active abilities cannot be deactivated.
+    Component values are stored as custom narrative properties.
+
+    The character is identified by the ``char_id`` URL parameter.
+    """
     model = CharacterAsset
     template_name = "characters/characterasset_edit.html"
     context_object_name = "asset"
@@ -407,11 +486,26 @@ class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
         return redirect("characters:character-assets-list", char_id=self.get_object().character.id)#type: ignore
     
 class NewMinorQuestView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+    """
+    Create a new minor quest (journey or fight) for a character.
+
+    This view allows a player to create a new :model:`characters.MinorQuest`,
+    attaching it to a specific :model:`characters.Character`.
+
+    The character is identified by the ``char_id`` URL parameter.
+    """
     model = MinorQuest
     form_class = NewMinorQuestForm
     template_name = "generic_form.html"
 
 class EditMinorQuestView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+    """
+    Edit an existing minor quest.
+
+    This view allows updating a :model:`characters.MinorQuest` belonging to a character.
+    The character is identified by the ``char_id`` URL parameter.
+    Provides difficulty_tracker in context for rendering progress track UI.
+    """
     model = MinorQuest
     form_class = EditMinorQuestForm
     template_name = "characters/minorquest_list.html"
@@ -430,6 +524,15 @@ class EditMinorQuestView(BelongsToCharacterMixin, AddCharacterContextMixin, Upda
         return reverse("characters:quests-list", kwargs={"char_id": self.kwargs["char_id"]})
 
 class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
+    """
+    Display the list of vows for a character.
+
+    This view lists all :model:`characters.Vow` instances
+    associated with a specific :model:`characters.Character`.
+
+    The character is identified by the ``char_id`` URL parameter.
+    Provides difficulty_tracker in context for rendering progress track UI.
+    """
     model = Vow
 
     def get_context_data(self, **kwargs):
@@ -438,12 +541,33 @@ class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, L
         return context
 
 class FinishQuestView(DeleteView):
+    """
+    Delete (finish) a minor quest.
+
+    This view removes a :model:`characters.MinorQuest` when a journey or
+    fight is completed and should no longer appear on the character's quest list.
+
+    Expects the ``char_id`` URL parameter to redirect back to the character's quest list
+    """
     model = MinorQuest
 
     def get_success_url(self) -> str:
         return reverse("characters:quests-list", kwargs={"char_id": self.kwargs["char_id"]})
 
 def change_resource(request: HttpRequest, char_id:int):
+    """
+    Adjust a character's resource tracker (health, spirit, supply, or momentum).
+
+    Expects query parameters:
+    - ``resource`` (str): One of "health", "spirit", "supply", or "momentum"
+    - ``action`` (str): Either "up" to increase or "down" to decrease the resource
+
+    The adjustment is made via the character's change_momentum() or change_resource()
+    methods, which handle clamping to valid ranges.
+
+    Redirects to the character sheet after updating. If action is invalid, redirects
+    without making changes.
+    """
     resource_name = request.GET.get("resource", "")
     action = request.GET.get("action", "")
    
@@ -461,6 +585,18 @@ def change_resource(request: HttpRequest, char_id:int):
     return redirect("characters:character-sheet", char_id)
 
 def change_experience(request:HttpRequest, char_id:int):
+    """
+    Gain or spend experience points for a character.
+
+    Expects query parameter:
+    - ``action`` (str): Either "gain" to gain 1 experience point or "spend" to
+      spend 1 experience point
+
+    The adjustment is made via the character's change_experience() method.
+
+    Redirects to the character sheet after updating. If action is invalid, redirects
+    without making changes.
+    """
     action = request.GET.get("action")
 
     if action not in {"gain", "spend"}:
@@ -472,6 +608,19 @@ def change_experience(request:HttpRequest, char_id:int):
     return redirect("characters:character-sheet", char_id)
 
 def increase_progress(request: HttpRequest, char_id: int):
+    """
+    Mark progress on a vow or minor quest (journey/fight).
+
+    Expects query parameters:
+    - ``type`` (str): One of "vow", "journey", or "fight"
+    - ``id`` (int): The ID of the :model:`characters.Vow` or :model:`characters.MinorQuest`
+    - ``next`` (str, optional): URL name for post-update redirect; defaults to character sheet
+
+    For vows, uses the optional ``next`` parameter to redirect. For quests, always
+    redirects to the quests list.
+
+    Redirects to character sheet if type is invalid.
+    """
     progress_type = request.GET.get("type", "")
     obj_id = request.GET.get("id", False)
 
@@ -489,6 +638,17 @@ def increase_progress(request: HttpRequest, char_id: int):
         return redirect("characters:quests-list", char_id)
 
 def fulfill_vow(request: HttpRequest, char_id: int, pk: int) -> HttpResponse:
+    """
+    Mark a vow as fulfilled.
+
+    Sets the :model:`characters.Vow` is_fulfilled flag to True, indicating
+    the vow has been completed.
+
+    The character is identified by ``char_id`` and the vow by ``pk`` URL parameters.
+
+    Expects optional query parameter:
+    - ``next`` (str, optional): URL name for post-update redirect; defaults to character sheet
+    """
     vow = Vow.objects.get(id=pk)
     vow.is_fulfilled = True
     vow.save(update_fields=['is_fulfilled'])

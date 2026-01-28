@@ -51,7 +51,7 @@ class AssetAbilityDefinition(models.Model):
     description = models.TextField(
         help_text="Narrative and mechanical features of the related `AssetDefinition` object if this ability is active")
     initially_active = models.BooleanField(default=False,
-        help_text="Whether this ability is aleary active when picking up the asset")
+        help_text="Whether this ability is already active when picking up the asset")
 
     def __str__(self):
         return f"{self.asset.title} Ability: {self.title}"
@@ -67,7 +67,7 @@ class AssetComponentDefinition(models.Model):
     """
 
     asset = models.ForeignKey(AssetDefinition, on_delete=models.CASCADE, related_name='components')
-    title = models.CharField(max_length=20, verbose_name="Compontent's name: e.g. name of the companion/god/patron")
+    title = models.CharField(max_length=20, verbose_name="Component's name: e.g. name of the companion/god/patron")
 
     def __str__(self):
         return f"{self.asset.title} Component: {self.title}"
@@ -113,7 +113,7 @@ class Move(models.Model):
         help_text="Usually the outcome of the move on strong/weak hit or miss. Sometimes narrative outcome")
     
     roll_type = models.CharField(max_length=20, choices=ROLL_TYPES, 
-        help_text="Roll required to make the move. Some moves require oracle roll after action roll. The move's role type is `action` in such case")
+        help_text="Roll required to make the move. Some moves require oracle roll after action roll. The move's roll type is `action` in such case")
 
     def __str__(self):
         return self.title

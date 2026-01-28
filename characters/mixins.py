@@ -55,6 +55,16 @@ class SaveCharacterAttributeMixin:
         return redirect('characters:character-sheet', pk=character_id)
     
 class BelongsToCharacterMixin:
+    """
+    Filter a queryset to objects belonging to a specific character.
+
+    Restricts the queryset to objects related to the character identified by
+    the ``char_id`` keyword argument in the URL. Useful for detail and delete
+    views that operate on character-scoped objects.
+
+    Expects a ``char_id`` keyword argument in the URL and ``url_kwarg``
+    can be overridden to use a different parameter name.
+    """
     url_kwarg = "char_id"
 
     def get_queryset(self):

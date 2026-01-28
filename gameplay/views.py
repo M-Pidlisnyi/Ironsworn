@@ -10,6 +10,24 @@ def home_page(request):
     return render(request, 'gameplay/home_page.html')
 
 class StoriesListView(ListView):
+    """
+    Display all stories across the current user's worlds.
+
+    This view aggregates :model:`gameplay.Story` instances from all worlds
+    owned by the authenticated user, allowing them to see all ongoing narratives
+    in one place.
+
+    **Template:**
+    Renders the :template:`gameplay/stories_list.html` template.
+
+    **Context**
+
+    ``stories_list``
+        All :model:`gameplay.Story` objects across the user's worlds.
+
+    ``worlds_list``
+        All :model:`worlds.World` objects owned by the current user.
+    """
     model = Story
     template_name = "gameplay/stories_list.html"
     context_object_name = "stories_list"
@@ -29,6 +47,18 @@ class StoriesListView(ListView):
 
 
 class StoryDetailView(DetailView):
+    """
+    Display a story and allow adding narrative events.
+
+    This view displays the full :model:`gameplay.Story` including all
+    :model:`gameplay.Event` instances in chronological order.
+
+    POST requests create new events. The event text is provided via the
+    ``text`` form field.
+
+    **Template:**
+    Renders the default detail template for :model:`gameplay.Story`.
+    """
     model = Story
 
     def post(self, request, *args, **kwargs):
@@ -40,6 +70,15 @@ class StoryDetailView(DetailView):
 
 
 class CreateStoryView(CreateView):
+    """
+    Create a new story within a world.
+
+    This view allows a user to create a new :model:`gameplay.Story`,
+    selecting a :model:`worlds.World` and providing a title and prologue.
+
+    **Template:**
+    Renders the :template:`generic_form.html` template.
+    """
     model = Story
     fields = ["world", "title", "prologue"]
     template_name = "generic_form.html"
