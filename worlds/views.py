@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -8,7 +10,7 @@ from .forms import NewWorldForm, WorldTruthsForm
 from .models import World, WorldTruth
 
 
-class WorldsListView(ListView):
+class WorldsListView(LoginRequiredMixin, ListView):
     """
     Display all worlds owned by the current user.
 
@@ -23,7 +25,7 @@ class WorldsListView(ListView):
     def get_queryset(self):
         return World.objects.filter(user=self.request.user)
 
-class NewWorldView(CreateView):
+class NewWorldView(LoginRequiredMixin, CreateView):
     """
     Create a new world.
 
@@ -45,6 +47,7 @@ class NewWorldView(CreateView):
         return redirect("worlds:set-truths", pk=new_world.pk)
     
 
+@login_required
 def set_wordlTruths(request: HttpRequest, pk: int):
     """
     Set worldbuilding truths for a newly created world.

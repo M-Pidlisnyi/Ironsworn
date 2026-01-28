@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.urls import reverse
 
@@ -174,7 +175,7 @@ def save_character(request: HttpRequest) -> HttpResponse:
     del request.session['char_creation_data']
     return redirect('characters:character-sheet', pk=character.pk)
 
-class CharacterSheetView(DetailView):
+class CharacterSheetView(LoginRequiredMixin, DetailView):
     """
     Display the complete character sheet for an Ironsworn character.
 
@@ -267,7 +268,7 @@ class CharacterSheetView(DetailView):
 
         return context
 
-class CharacterListView(ListView):
+class CharacterListView(LoginRequiredMixin, ListView):
     """
     Display the list of characters owned by the current user.
 
@@ -287,7 +288,7 @@ class CharacterListView(ListView):
     def get_queryset(self):
         return Character.objects.filter(user=self.request.user)
     
-class AddAssetView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+class AddAssetView(LoginRequiredMixin, AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     """
     Add a new asset to a character.
 
@@ -315,7 +316,7 @@ class AddAssetView(AddCharacterContextMixin, SaveCharacterAttributeMixin, Create
     template_name = 'generic_form.html'
     form_class = CharacterAssetForm
 
-class CharacterAssetsListView(AddCharacterContextMixin, ListView):
+class CharacterAssetsListView(LoginRequiredMixin, AddCharacterContextMixin, ListView):
     """
     Display the list of assets owned by a character.
 
@@ -344,7 +345,7 @@ class CharacterAssetsListView(AddCharacterContextMixin, ListView):
         character_id = self.kwargs.get('char_id')
         return CharacterAsset.objects.filter(character__id=character_id)    
 
-class CharacterBondsList(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
+class CharacterBondsList(LoginRequiredMixin, BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
     """
     Display the list of bonds for a character.
 
@@ -355,7 +356,7 @@ class CharacterBondsList(BelongsToCharacterMixin, AddCharacterContextMixin, List
     """
     model = Bond
     
-class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+class NewBondView(LoginRequiredMixin, AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     """
     Create a new bond for a character.
 
@@ -368,7 +369,7 @@ class NewBondView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateV
     form_class = BondForm
     template_name = 'generic_form.html'
 
-class EditBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+class EditBondView(LoginRequiredMixin, BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
     """
     Edit an existing bond.
 
@@ -391,7 +392,7 @@ class EditBondView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView
     def get_success_url(self) -> str:
         return reverse("characters:character-bonds-list", kwargs={"char_id": self.kwargs["char_id"]})
     
-class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+class NewVowView(LoginRequiredMixin, AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     """
     Create a new vow for a character.
 
@@ -404,7 +405,7 @@ class NewVowView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateVi
     form_class = NewVowForm
     template_name = 'generic_form.html'
 
-class EditVowView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+class EditVowView(LoginRequiredMixin, BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
     """
     Edit an existing vow.
 
@@ -429,7 +430,7 @@ class EditVowView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView)
     def get_success_url(self) -> str:
         return reverse("characters:vows-list", kwargs={"char_id": self.kwargs["char_id"]})
 
-class MinorQuestsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
+class MinorQuestsListView(LoginRequiredMixin, BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
     """
     Display the list of minor quests for a character.
 
@@ -447,7 +448,7 @@ class MinorQuestsListView(BelongsToCharacterMixin, AddCharacterContextMixin, Lis
         context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
         return context
     
-class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
+class CharacterAssetEditView(LoginRequiredMixin, AddCharacterContextMixin, DetailView):
     """
     Display and edit a character's asset abilities and components.
 
@@ -485,7 +486,7 @@ class CharacterAssetEditView(AddCharacterContextMixin, DetailView):
 
         return redirect("characters:character-assets-list", char_id=self.get_object().character.id)#type: ignore
     
-class NewMinorQuestView(AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
+class NewMinorQuestView(LoginRequiredMixin, AddCharacterContextMixin, SaveCharacterAttributeMixin, CreateView):
     """
     Create a new minor quest (journey or fight) for a character.
 
@@ -498,7 +499,7 @@ class NewMinorQuestView(AddCharacterContextMixin, SaveCharacterAttributeMixin, C
     form_class = NewMinorQuestForm
     template_name = "generic_form.html"
 
-class EditMinorQuestView(BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
+class EditMinorQuestView(LoginRequiredMixin, BelongsToCharacterMixin, AddCharacterContextMixin, UpdateView):
     """
     Edit an existing minor quest.
 
@@ -523,7 +524,7 @@ class EditMinorQuestView(BelongsToCharacterMixin, AddCharacterContextMixin, Upda
     def get_success_url(self) -> str:
         return reverse("characters:quests-list", kwargs={"char_id": self.kwargs["char_id"]})
 
-class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
+class CharacterVowsListView(LoginRequiredMixin, BelongsToCharacterMixin, AddCharacterContextMixin, ListView):
     """
     Display the list of vows for a character.
 
@@ -540,7 +541,7 @@ class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, L
         context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
         return context
 
-class FinishQuestView(DeleteView):
+class FinishQuestView(LoginRequiredMixin, DeleteView):
     """
     Delete (finish) a minor quest.
 
@@ -554,6 +555,7 @@ class FinishQuestView(DeleteView):
     def get_success_url(self) -> str:
         return reverse("characters:quests-list", kwargs={"char_id": self.kwargs["char_id"]})
 
+@login_required
 def change_resource(request: HttpRequest, char_id:int):
     """
     Adjust a character's resource tracker (health, spirit, supply, or momentum).
@@ -584,6 +586,7 @@ def change_resource(request: HttpRequest, char_id:int):
     
     return redirect("characters:character-sheet", char_id)
 
+@login_required
 def change_experience(request:HttpRequest, char_id:int):
     """
     Gain or spend experience points for a character.
@@ -607,6 +610,7 @@ def change_experience(request:HttpRequest, char_id:int):
 
     return redirect("characters:character-sheet", char_id)
 
+@login_required
 def increase_progress(request: HttpRequest, char_id: int):
     """
     Mark progress on a vow or minor quest (journey/fight).
@@ -637,6 +641,7 @@ def increase_progress(request: HttpRequest, char_id: int):
         quest.increase_progress()
         return redirect("characters:quests-list", char_id)
 
+@login_required
 def fulfill_vow(request: HttpRequest, char_id: int, pk: int) -> HttpResponse:
     """
     Mark a vow as fulfilled.

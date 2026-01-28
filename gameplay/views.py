@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, ListView, DetailView
@@ -9,7 +10,7 @@ from .models import Story, Event
 def home_page(request):
     return render(request, 'gameplay/home_page.html')
 
-class StoriesListView(ListView):
+class StoriesListView(LoginRequiredMixin, ListView):
     """
     Display all stories across the current user's worlds.
 
@@ -69,7 +70,7 @@ class StoryDetailView(DetailView):
 
 
 
-class CreateStoryView(CreateView):
+class CreateStoryView(LoginRequiredMixin, CreateView):
     """
     Create a new story within a world.
 
