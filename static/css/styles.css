@@ -212,6 +212,15 @@ label {
   border: 1px solid black;
 }
 
+.fulfilled-vow{
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.fulfilled-vow .vow-title{
+  text-decoration: line-through;
+  
+}
 
 .quest-title{
   text-align: center;
@@ -226,6 +235,10 @@ label {
   width: 70%;
   margin-left: 15%;
   border: 1px solid black;
+}
+
+.finish-quest-btn{
+  all: unset;
 }
 
 .rank{

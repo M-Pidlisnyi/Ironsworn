@@ -1,6 +1,6 @@
 from typing import Any
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -437,6 +437,11 @@ class CharacterVowsListView(BelongsToCharacterMixin, AddCharacterContextMixin, L
         context["difficulty_tracker"] = [dif[1] for dif in settings.DIFFICULTY_LEVELS]
         return context
 
+class FinishQuestView(DeleteView):
+    model = MinorQuest
+
+    def get_success_url(self) -> str:
+        return reverse("characters:quests-list", kwargs={"char_id": self.kwargs["char_id"]})
 
 def change_resource(request: HttpRequest, char_id:int):
     resource_name = request.GET.get("resource", "")
@@ -452,8 +457,7 @@ def change_resource(request: HttpRequest, char_id:int):
         character.change_momentum(delta)
     elif resource_name:
         character.change_resource(resource_name, delta)
-    character.save(update_fields=[resource_name])
-
+    
     return redirect("characters:character-sheet", char_id)
 
 def change_experience(request:HttpRequest, char_id:int):
@@ -463,7 +467,7 @@ def change_experience(request:HttpRequest, char_id:int):
         return redirect("characters:character-sheet", char_id)
     
     character = Character.objects.get(id=char_id)
-    character.change_experience(action)#saving is done inisde the method
+    character.change_experience(action)
 
     return redirect("characters:character-sheet", char_id)
 
@@ -477,10 +481,17 @@ def increase_progress(request: HttpRequest, char_id: int):
     if progress_type == "vow":
         vow = Vow.objects.get(id=obj_id)
         vow.increase_progress()
-        return redirect("characters:character-sheet", char_id)
+        redirect_to = request.GET.get("next", "characters:character-sheet")
+        return redirect(redirect_to, char_id)
     else:
         quest = MinorQuest.objects.get(id=obj_id)
         quest.increase_progress()
         return redirect("characters:quests-list", char_id)
 
+def fulfill_vow(request: HttpRequest, char_id: int, pk: int) -> HttpResponse:
+    vow = Vow.objects.get(id=pk)
+    vow.is_fulfilled = True
+    vow.save(update_fields=['is_fulfilled'])
 
+    redirect_to = request.GET.get("next", "characters:character-sheet")
+    return redirect(redirect_to, char_id)

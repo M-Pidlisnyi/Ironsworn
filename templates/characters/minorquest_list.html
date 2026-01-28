@@ -39,13 +39,16 @@
                 </span>
                 {{ quest }} 
                 <span class="fullfill-vow-text">
-                    <a href="#quest-{{quest.id}}" class="ui-link">
-                        {% if quest.type == 'journey' %}
-                            Reach Your Destination
-                        {% elif quest.type == 'fight' %}
-                            End the Fight
-                        {% endif %}
-                    </a>
+                    <form action="{% url 'characters:finish-quest' character.id quest.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="finish-quest-btn">
+                            {% if quest.type == 'journey' %}
+                                Reach Your Destination
+                            {% elif quest.type == 'fight' %}
+                                End the Fight
+                            {% endif %}
+                        </button>
+                    </form>
                 </span> 
             </div>
             <div class="quest-description">

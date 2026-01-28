@@ -121,6 +121,7 @@ class Vow(models.Model):
     description = models.TextField(null=True, blank=True)
     progress = models.IntegerField(default=0, help_text="ticks, not progress boxes")
     difficulty = models.IntegerField(choices=settings.DIFFICULTY_LEVELS)
+    is_fulfilled = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.character.name} vowed to {self.title}"

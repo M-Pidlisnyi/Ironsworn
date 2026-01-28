@@ -31,18 +31,37 @@
         {% endwith %}
     </form>
     {% else %}
-        <div class="vow" id="vow-{{vow.pk}}">
-            <div class="line vow-title">{{ vow.title }} <span class="fullfill-vow-text"><a href="#vow-{{vow.pk}}" class="ui-link">Fullfill</a></span></div>
-            <div class="vow-description">{{vow.description}} <a href="{% url 'characters:edit-vow' character.id vow.id %}" class="ui-link vow-edit-btn">✏</a></div>
-            <div class="rank">
-                {% for r in difficulty_tracker %}
-                <span class="circle {% if vow.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
-                {% endfor %}
+        {% if not vow.is_fulfilled %}
+            <div class="vow" id="vow-{{vow.pk}}">
+                <div class="line vow-title">
+                        <span class="increase-progress-text">
+                            <a href="{% url 'characters:increase-progress' character.id %}?type=vow&id={{vow.id}}&next={{request.get_full_path}}#vow-{{vow.id}}" 
+                            name="vow-{{vow.id}}" 
+                            class="ui-link">
+                                Reach a Milestone
+                            </a>
+                        </span>
+                        {{ vow.title }}
+                        <span class="fullfill-vow-text">
+                            <a href="{% url 'characters:fulfill-vow' character.id vow.id %}?next={{request.get_full_path}}" class="ui-link">Fullfill the Vow</a>
+                        </span>
+                    </div>
+                <div class="vow-description">{{vow.description}} <a href="{% url 'characters:edit-vow' character.id vow.id %}" class="ui-link vow-edit-btn">✏</a></div>
+                <div class="rank">
+                    {% for r in difficulty_tracker %}
+                    <span class="circle {% if vow.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
+                    {% endfor %}
+                </div>
+                {% with filled_progress=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
+                    {% include "components/progress_track.html" %}
+                {% endwith %}
             </div>
-            {% with filled_progress=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
-                {% include "components/progress_track.html" %}
-            {% endwith %}
-        </div>
+        {% else %}
+            <div class="vow fulfilled-vow" id="vow-{{vow.pk}}">
+                <div class="line vow-title">{{ vow.title }}</div>
+                <div class="rank"><i>✔FULLFILLED AS:  <span class="difficulty-text">{{ vow.get_difficulty_display|upper }}</span></i></div>
+            </div>
+        {% endif %}
     {% endif %}
 {% endfor %}
 <hr>

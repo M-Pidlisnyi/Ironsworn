@@ -75,26 +75,27 @@
       <div class="section">
         <h3>VOWS</h3>
         {% for vow in character.vows.all %}
-
-          <div class="vow" id="vow-{{vow.id}}">
-            <div class="line vow-title">
-              <span class="increase-progress-text">
-                <a href="{% url 'characters:increase-progress' character.id %}?type=vow&id={{vow.id}}#vow-{{vow.id}}" name="vow-{{vow.id}}" class="ui-link">Reach a Milestone</a>
-              </span>
-              {{ vow.title }} 
-              <span class="fullfill-vow-text">
-                <a href="#vow-{{vow.id}}" class="ui-link">Fullfill Your Vow</a>
+          {% if not vow.is_fulfilled %}
+            <div class="vow" id="vow-{{vow.id}}">
+              <div class="line vow-title">
+                <span class="increase-progress-text">
+                  <a href="{% url 'characters:increase-progress' character.id %}?type=vow&id={{vow.id}}#vow-{{vow.id}}" name="vow-{{vow.id}}" class="ui-link">Reach a Milestone</a>
                 </span>
+                {{ vow.title }} 
+                <span class="fullfill-vow-text">
+                  <a href="{% url 'characters:fulfill-vow' character.id vow.id %}" class="ui-link">Fullfill Your Vow</a>
+                  </span>
+              </div>
+              <div class="rank">
+                {% for r in difficulty_tracker %}
+                  <span class="circle {% if vow.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
+                {% endfor %}
+              </div>
+              {% with filled_progress=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
+                {% include "components/progress_track.html" %}
+              {% endwith %}
             </div>
-            <div class="rank">
-              {% for r in difficulty_tracker %}
-                <span class="circle {% if vow.difficulty == forloop.counter %}filled{% endif %}"></span> <span class="difficulty-text">{{ r|upper }}</span>
-              {% endfor %}
-            </div>
-            {% with filled_progress=vow.progress|div:4 partial_amount=vow.progress|modulo:4%}
-              {% include "components/progress_track.html" %}
-            {% endwith %}
-          </div>
+          {% endif %}
         {% endfor %}
         <p style="text-align: center;"><a  href="{% url 'characters:vows-list' character.pk%}" class="ui-link">View Vows</a></p>
       </div>
